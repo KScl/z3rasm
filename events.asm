@@ -67,6 +67,7 @@ OnUncleItemGet:
 	PLA
 	JSL Link_ReceiveItem
 
+	LDA.l UncleRefill : BIT.b #$08 : BEQ + : LDA $7EF38B : !ADD #3 : STA $7EF38B : STA $7EF36F : + ; refill universal keys
 	LDA.l UncleRefill : BIT.b #$04 : BEQ + : LDA.b #$80 : STA $7EF373 : + ; refill magic
 	LDA.l UncleRefill : BIT.b #$02 : BEQ + : LDA.b #50 : STA $7EF375 : + ; refill bombs
 	LDA.l UncleRefill : BIT.b #$01 : BEQ + ; refill arrows
