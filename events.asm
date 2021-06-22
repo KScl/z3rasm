@@ -259,6 +259,11 @@ PostItemAnimation:
 		JML.l Ancilla_ReceiveItem_objectFinished
 	+
 
+	LDA.w $02E9 : CMP.b #$01 : BNE +
+		LDA.b $2F : BEQ +
+			JSL.l IncrementChestTurnCounter
+	+
+
     STZ $02E9 : LDA $0C5E, X ; thing we wrote over to get here
 	JML.l Ancilla_ReceiveItem_optimus+6
 ;--------------------------------------------------------------------------------
