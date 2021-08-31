@@ -102,6 +102,7 @@ db #$20, #$19, #$08, #$31 ; year/month/day
 !MULTIWORLD_SPRITEITEM_PLAYER_ID = "$7EC099"
 !MULTIWORLD_HUD_TIMER = "$7EC09A"
 !MULTIWORLD_HUD_DELAY = "#120"
+!MULTIWORLD_ITEM_ID = "$7EC09B" ; for lua scripts?
 !Dungeon_ChestData = "$01E96C"
 
 incsrc hooks.asm

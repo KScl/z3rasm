@@ -486,6 +486,7 @@ AddReceivedItemExpanded:
 			JSR IncrementItemCounters
 		+
 		LDA $02D8 ; Item Value
+		STA !MULTIWORLD_ITEM_ID
 		
 		CMP.b #$16 : BEQ .bottle ; Bottle
 		CMP.b #$2B : BEQ .bottle ; Red Potion w/bottle
