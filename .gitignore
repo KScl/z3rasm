@@ -3,3 +3,6 @@ tournament.asm
 /.idea
 /__pycache__
 basepatch.bmbp
+
+/inp/
+/out/
