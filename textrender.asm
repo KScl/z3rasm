@@ -37,10 +37,6 @@ org $0ef4b3
 org $0ef4f2
 	RenderCharOverlap_return:
 
-org $539000
-LowercaseFont:
-	incbin lowerfont.gfx
-
 pullpc
 
 RenderNewChar:
@@ -53,7 +49,7 @@ RenderNewChar:
 	+ ; New lowercase font characters
 	AND #$001F
 	ASL : TAX
-    PHB : PEA $5353 : PLB : PLB ; partially taken from SMZ3
+    PHB : PEA $3333 : PLB : PLB ; partially taken from SMZ3
     ASL #5 : TAY
     LDX #$00000 : -
     ; Buffer 11px wide. Last three pixels are storred flipped and rotated.

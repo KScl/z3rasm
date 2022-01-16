@@ -303,6 +303,11 @@ org $339000
 incbin sheet178.gfx
 warnpc $339600
 
+org $33A000
+LowercaseFont:
+incbin lowerfont.gfx
+warnpc $33B000
+
 org $328000
 Extra_Text_Table:
 incsrc itemtext.asm
