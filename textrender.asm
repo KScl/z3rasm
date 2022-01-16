@@ -3,10 +3,12 @@ pushpc
 org $0efd7c ; Render width table
     db $08, $01, $ff
 
+; Patch jump-to-data out of text commands,
+; replace with a command to erase part of the dialog window for cursor movement
 org $0ef234
-	dw RenderClear
+	dw RenderClearCursor
 org $0efd80
-RenderClear:
+RenderClearCursor:
 {
 	REP #$30
 	LDA $1CF0 : AND #$00FF : CMP #$0003 : BPL +
@@ -43,6 +45,7 @@ RenderNewChar:
 {
 	AND #$01FF
 	CMP #$0100 : !BGE +
+	; Character from original font
 	STA $0e : ASL : TAX : ASL : ADC $0e
 	JML RenderNewChar_returnOriginal
 
@@ -74,5 +77,3 @@ RenderCharOverlap:
 	LDY $0d
 	JML RenderCharOverlap_return
 }
-
-; $0ef2d7 : RenderSingleCharacter
