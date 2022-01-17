@@ -64,8 +64,7 @@ FixShopCode:
 VitreousKeyReset:
     lda.l DRMode : beq +
         stz $0cba, x
-    + jsl $0db818 ;restore old code
-    rtl
+    + JML $0db818 ;restore old code
 
 GuruguruFix:
     lda $a0 : cmp #$df : !bge +
@@ -126,7 +125,7 @@ RainPrevention:
 				LDA.l $7EF3CC : AND #$00FF : CMP #$0001 : BEQ .done ; zelda is following
 					LDA $00 : AND #$00FF : CMP #$00A1 : BNE .done ; position is a1
 						PLA : LDA #$0008 : RTL
-			+ LDA.l BlockCastleDoorsInRain : BEQ .done ;flagged
+			+ LDA.l BlockCastleDoorsInRain : AND #$0001 : BEQ .done ;flagged
 			LDX #$FFFE
 			- INX #2 : LDA.l RemoveRainDoorsRoom, X : CMP #$FFFF : BEQ .done
 			CMP $A0 : BNE -

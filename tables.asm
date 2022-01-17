@@ -401,7 +401,7 @@ db #$00 ; #$00 - Normal, #$01 - Open TR Entrance if exiting from it
 ;--------------------------------------------------------------------------------
 org $30808A ; PC 0x18008A
 BlockCastleDoorsInRain:
-db #$00 ; #$00 - Normal, $01 - Block them (Used by Entrance Rando in Standard Mode)
+db #$00 ; #$00 - Normal, $01 - Remove door (DR behavior) - $02 - Rail off (Base Rom behavior)
 ;--------------------------------------------------------------------------------
 org $30808B ; PC 0x18008B
 PreopenPyramid:
