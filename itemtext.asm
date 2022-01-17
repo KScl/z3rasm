@@ -1,113 +1,73 @@
+table dialogcharmap.txt
+
 org $328000
-; You have found
-; the map of
 Notice_MapOf:
-	db $74, $00, $C2, $01, $0E, $01, $14, $00, $FF, $01, $07, $01, $00, $01, $15, $01, $04, $00, $FF, $01, $05, $01, $0E, $01, $14, $01, $0D, $01, $03
-	db $75, $01, $13, $01, $07, $01, $04, $00, $FF, $01, $0C, $01, $00, $01, $0F, $00, $FF, $01, $0E, $01, $05
+	db $74 : dw "You have found"
+	db $75 : dw "the map of"
 	dw #$7F7F
 
-; You have found
-; the compass of
 Notice_CompassOf:
-	db $74, $00, $C2, $01, $0E, $01, $14, $00, $FF, $01, $07, $01, $00, $01, $15, $01, $04, $00, $FF, $01, $05, $01, $0E, $01, $14, $01, $0D, $01, $03
-	db $75, $01, $13, $01, $07, $01, $04, $00, $FF, $01, $02, $01, $0E, $01, $0C, $01, $0F, $01, $00, $01, $12, $01, $12, $00, $FF, $01, $0E, $01, $05
+	db $74 : dw "You have found"
+	db $75 : dw "the compass of"
 	dw #$7F7F
 
-; Oh look! It's
-; the big key of
 Notice_BigKeyOf:
-	db $74, $00, $B8, $01, $07, $00, $FF, $01, $0B, $01, $0E, $01, $0E, $01, $0A, $00, $C7, $00, $FF, $00, $B2, $01, $13, $00, $D8, $01, $12
-	db $75, $01, $13, $01, $07, $01, $04, $00, $FF, $00, $AB, $01, $08, $01, $06, $00, $FF, $00, $B4, $01, $04, $01, $18, $00, $FF, $01, $0E, $01, $05
+	db $74 : dw "Oh look! It's"
+	db $75 : dw "the Big Key of"
 	dw #$7F7F
 
-; You have found
-; a small key to
 Notice_SmallKeyOf:
-	db $74, $00, $C2, $01, $0E, $01, $14, $00, $FF, $01, $07, $01, $00, $01, $15, $01, $04, $00, $FF, $01, $05, $01, $0E, $01, $14, $01, $0D, $01, $03
-	db $75, $01, $00, $00, $FF, $01, $12, $01, $0C, $01, $00, $01, $0B, $01, $0B, $00, $FF, $01, $0A, $01, $04, $01, $18, $00, $FF, $01, $13, $01, $0E
+	db $74 : dw "You have found"
+	db $75 : dw "a small key to"
 	dw #$7F7F
 
-; the Light World
 Notice_LightWorld:
-	db $76, $01, $13, $01, $07, $01, $04, $00, $FF, $00, $B5, $01, $08, $01, $06, $01, $07, $01, $13, $00, $FF, $00, $C0, $01, $0E, $01, $11, $01, $0B, $01, $03
-	dw #$7F7F
+	db $76 : dw "the Light World" : dw #$7F7F
 
-; the Dark World
 Notice_DarkWorld:
-	db $76, $01, $13, $01, $07, $01, $04, $00, $FF, $00, $AD, $01, $00, $01, $11, $01, $0A, $00, $FF, $00, $C0, $01, $0E, $01, $11, $01, $0B, $01, $03
-	dw #$7F7F
+	db $76 : dw "the Dark World" : dw #$7F7F
 
-; Ganon's Tower
 Notice_GTower:
-	db $76, $00, $B0, $01, $00, $01, $0D, $01, $0E, $01, $0D, $00, $D8, $01, $12, $00, $FF, $00, $BD, $01, $0E, $01, $16, $01, $04, $01, $11
-	dw #$7F7F
+	db $76 : dw "Ganon's Tower" : dw #$7F7F
 
-; Turtle Rock
 Notice_TRock:
-	db $76, $00, $BD, $01, $14, $01, $11, $01, $13, $01, $0B, $01, $04, $00, $FF, $00, $BB, $01, $0E, $01, $02, $01, $0A
-	dw #$7F7F
+	db $76 : dw "Turtle Rock" : dw #$7F7F
 
-; Thieves' Town
 Notice_Thieves:
-	db $76, $00, $BD, $01, $07, $01, $08, $01, $04, $01, $15, $01, $04, $01, $12, $00, $D8, $00, $FF, $00, $BD, $01, $0E, $01, $16, $01, $0D
-	dw #$7F7F
+	db $76 : dw "Thieves' Town" : dw #$7F7F
 
-; Tower of Hera
 Notice_Hera:
-	db $76, $00, $BD, $01, $0E, $01, $16, $01, $04, $01, $11, $00, $FF, $01, $0E, $01, $05, $00, $FF, $00, $B1, $01, $04, $01, $11, $01, $00
-	dw #$7F7F
+	db $76 : dw "Tower of Hera" : dw #$7F7F
 
-; Ice Palace
 Notice_Ice:
-	db $76, $00, $B2, $01, $02, $01, $04, $00, $FF, $00, $B9, $01, $00, $01, $0B, $01, $00, $01, $02, $01, $04
-	dw #$7F7F
+	db $76 : dw "Ice Palace" : dw #$7F7F
 
-; Skull Woods
 Notice_Skull:
-	db $76, $00, $BC, $01, $0A, $01, $14, $01, $0B, $01, $0B, $00, $FF, $00, $C0, $01, $0E, $01, $0E, $01, $03, $01, $12
-	dw #$7F7F
+	db $76 : dw "Skull Woods" : dw #$7F7F
 
-; Misery Mire
 Notice_Mire:
-	db $76, $00, $B6, $01, $08, $01, $12, $01, $04, $01, $11, $01, $18, $00, $FF, $00, $B6, $01, $08, $01, $11, $01, $04
-	dw #$7F7F
+	db $76 : dw "Misery Mire" : dw #$7F7F
 
-; Dark Palace
 Notice_PoD:
-	db $76, $00, $AD, $01, $00, $01, $11, $01, $0A, $00, $FF, $00, $B9, $01, $00, $01, $0B, $01, $00, $01, $02, $01, $04
-	dw #$7F7F
+	db $76 : dw "Dark Palace" : dw #$7F7F
 
-; Swamp Palace
 Notice_Swamp:
-	db $76, $00, $BC, $01, $16, $01, $00, $01, $0C, $01, $0F, $00, $FF, $00, $B9, $01, $00, $01, $0B, $01, $00, $01, $02, $01, $04
-	dw #$7F7F
+	db $76 : dw "Swamp Palace" : dw #$7F7F
 
-; Agahnim's Tower
 Notice_AgaTower:
-	db $76, $00, $AA, $01, $06, $01, $00, $01, $07, $01, $0D, $01, $08, $01, $0C, $00, $D8, $01, $12, $00, $FF, $00, $BD, $01, $0E, $01, $16, $01, $04, $01, $11
-	dw #$7F7F
+	db $76 : dw "Agahnim's Tower" : dw #$7F7F
 
-; Desert Palace
 Notice_Desert:
-	db $76, $00, $AD, $01, $04, $01, $12, $01, $04, $01, $11, $01, $13, $00, $FF, $00, $B9, $01, $00, $01, $0B, $01, $00, $01, $02, $01, $04
-	dw #$7F7F
+	db $76 : dw "Desert Palace" : dw #$7F7F
 
-; Eastern Palace
 Notice_Eastern:
-	db $76, $00, $AE, $01, $00, $01, $12, $01, $13, $01, $04, $01, $11, $01, $0D, $00, $FF, $00, $B9, $01, $00, $01, $0B, $01, $00, $01, $02, $01, $04
-	dw #$7F7F
+	db $76 : dw "Eastern Palace" : dw #$7F7F
 
-; Hyrule Castle
 Notice_Castle:
-	db $76, $00, $B1, $01, $18, $01, $11, $01, $14, $01, $0B, $01, $04, $00, $FF, $00, $AC, $01, $00, $01, $12, $01, $13, $01, $0B, $01, $04
-	dw #$7F7F
+	db $76 : dw "Hyrule Castle" : dw #$7F7F
 
-; Hyrule Castle
 Notice_Sewers:
-	db $76, $00, $B1, $01, $18, $01, $11, $01, $14, $01, $0B, $01, $04, $00, $FF, $00, $AC, $01, $00, $01, $12, $01, $13, $01, $0B, $01, $04
-	dw #$7F7F
+	db $76 : dw "Hyrule Castle" : dw #$7F7F
 
-; This Dungeon
 Notice_Self:
-	db $76, $01, $13, $01, $07, $01, $08, $01, $12, $00, $FF, $01, $03, $01, $14, $01, $0D, $01, $06, $01, $04, $01, $0E, $01, $0D
-	dw #$7F7F
+	db $76 : dw "this dungeon" : dw #$7F7F
