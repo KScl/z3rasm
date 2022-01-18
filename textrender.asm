@@ -1,10 +1,60 @@
 pushpc
 
+; -----------------------------------------------------------------------------
+; Overwrite old function for drawing a segment of a character
+; -----------------------------------------------------------------------------
+org $0ef482
+RenderCharOverlap:
+{
+	SEP #$20                                ; 8-bit mode
+	LDA #$0F : STA $0f                      ; Loop counter
+
+	REP #$21                              ; 16-bit mode, carry clear
+	LDA $1ce6 : AND #$0007 : BEQ .noshift ; Get offset amount; if zero, go into shorter loop
+
+	; Loop for shifting required
+	EOR #$0007                  ; We want the inverse of the offset amount, for how many instructions to skip
+	ADC #.shift_slide : STA $00 ; Store jump pointer
+	SEP #$20                    ; 8-bit mode
+	--
+		LDA [$04], Y   ; Grab segment
+		BEQ +          ; Short circuit if empty
+		XBA : LDA #$00 ; Set up accumulator for shift
+
+		; Move segment into position between tiles
+		REP #$20              ; 16-bit mode
+		JMP ($0000)           ; Relative jump to the pointer we set up earlier
+		.shift_slide : LSR #7 ; Slide down shift rights to get into position
+
+		; Write segment to buffer
+		SEP #$20                              ; 8-bit mode
+		ORA $7F0010, X : STA $7F0010, X : XBA ; Draw right 8x8 tile
+		ORA $7F0000, X : STA $7F0000, X       ; Draw left 8x8 tile
+
+		+ : INX : INY : DEC $0f
+	BPL --
+	REP #$30 : RTS
+
+	; Loop for no shifting
+	.noshift
+	SEP #$20 ; 8-bit mode
+	--
+		LDA [$04], Y                    ; Grab segment
+		BEQ +                           ; Short circuit if empty
+		ORA $7F0000, X : STA $7F0000, X ; Draw left 8x8 tile
+
+		+ : INX : INY : DEC $0f
+	BPL --
+	REP #$30 : RTS
+}
+warnpc $ef4fa ; End location of original function
+; -----------------------------------------------------------------------------
 org $0efd7c ; Render width table
     db $08, $01, $ff
-
+; -----------------------------------------------------------------------------
 ; Patch jump-to-data out of text commands,
 ; replace with a command to erase part of the dialog window for cursor movement
+; -----------------------------------------------------------------------------
 org $0ef234
 	dw RenderClearCursor
 org $0efd80
@@ -26,19 +76,16 @@ RenderClearCursor:
 	RTS
 }
 warnpc $f0000
-
+; -----------------------------------------------------------------------------
+; Hook to make lowercase letters render, replacing kanji
+; -----------------------------------------------------------------------------
 org $0ef516
 	jml RenderNewChar
 org $0ef520
     RenderNewChar_returnOriginal:
 org $0ef567
     RenderNewChar_returnUncompressed:
-
-org $0ef4b3
-	jml RenderCharOverlap
-org $0ef4f2
-	RenderCharOverlap_return:
-
+; -----------------------------------------------------------------------------
 pullpc
 
 RenderNewChar:
@@ -62,18 +109,4 @@ RenderNewChar:
     PLB
     LDA #$00BD : STA $0e
     JML RenderNewChar_returnUncompressed
-}
-
-RenderCharOverlap:
-{
-	SEP #$20
-	BEQ + : -
-	CLC : ROR $02 : ROR $03 ; Move segment into position between tiles
-	DEY : BNE -
-	+
-	LDX $0b
-	LDA $02 : ORA $7F0000, X : STA $7F0000, X
-	LDA $03 : ORA $7F0010, X : STA $7F0010, X
-	LDY $0d
-	JML RenderCharOverlap_return
 }
