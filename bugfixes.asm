@@ -200,3 +200,10 @@ LDA $1B : BNE +
 		LDA $8C : CMP.b #$97
 +
 RTL
+
+;--------------------------------------------------------------------------------
+SetOverworldTransitionFlags:
+	LDA #$01
+	STA $0ABF ; used by witch
+	STA $021B ; used by race game
+	RTL
