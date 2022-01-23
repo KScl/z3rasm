@@ -2281,11 +2281,13 @@ JSL.l FreeDuckCheck : BEQ +
 	skip 3 ; a JSR we need to keep
 +
 ;================================================================================
+org $07A985 ; <- 3A985
+MirrorBonk_SendBack:
 org $07A9AC ; <- 3A9AC - Bank07.asm:6628 (LDA $0C : ORA $0E : STA $00 : AND.b #$0C : BEQ BRANCH_BETA)
 JML.l MirrorBonk
 MirrorBonk_NormalReturn:
-org $07A9D1 ; <- 3A9D1 - Bank07.asm:6649 (BRANCH_GAMMA:)
-MirrorBonk_BranchGamma:
+org $07A9D1 ; <- 3A9D1 - Bank07.asm:6649 (BRANCH_GAMMA: LDA.b #$2C : BRA BRANCH_3A99C)
+JML.l IncrementMirrorBonkCounter
 ;================================================================================
 
 ;================================================================================

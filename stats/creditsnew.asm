@@ -1,15 +1,29 @@
 ;===================================================================================================
-; LEAVE THIS HERE FOR PHP WRITES
+; WRITTEN BY THE RANDOMIZER
 ;===================================================================================================
+table "textmaps/credit_b_hi.map"
 YourSpriteCreditsHi:
-db 2
-db 55
-db "                            " ; $238002
+db 2, 55 : db "                            " ; $238002
 
+table "textmaps/credit_b_lo.map"
 YourSpriteCreditsLo:
-db 2
-db 55
-db "                            " ; $238020
+db 2, 55 : db "                            " ; $238020
+
+table "textmaps/credit_b_hi.map"
+GTBigKeyHi:
+db 2, 55 : db "GT BIG KEY               /22" ; Counter at $238058
+
+table "textmaps/credit_b_lo.map"
+GTBigKeyLo: 
+db 2, 55 : db "GT BIG KEY               /22" ; Counter at $238076
+
+table "textmaps/credit_b_hi.map"
+CollectionRateHi:
+db 2, 55 : db "COLLECTION RATE         /216" ; Counter at $238093
+
+table "textmaps/credit_b_lo.map"
+CollectionRateLo: 
+db 2, 55 : db "COLLECTION RATE         /216" ; Counter at $2380B1
 
 ;===================================================================================================
 
@@ -135,12 +149,14 @@ CreditsLineBlank:
 
 ;---------------------------------------------------------------------------------------------------
 
-%emptyline()
+%emptyline() ; Pretty sure this is required to be at the start. Don't touch.
+
 %smallcredits("ORIGINAL GAME STAFF", "yellow")
 
 %blankline()
-
+%blankline()
 %emptyline()
+
 %smallcredits("EXECUTIVE PRODUCER", "green")
 
 %blankline()
@@ -149,8 +165,6 @@ CreditsLineBlank:
 
 %blankline()
 %blankline()
-
-%emptyline()
 
 %smallcredits("PRODUCER", "yellow")
 
@@ -179,10 +193,8 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%emptyline()
 %smallcredits("ASSISTANT DIRECTORS", "yellow")
 
-%blankline()
 %blankline()
 
 %bigcredits("YASUHISA YAMAMURA")
@@ -196,9 +208,9 @@ CreditsLineBlank:
 
 %smallcredits("SCREEN GRAPHICS DESIGNERS", "green")
 
+%emptyline()
+%emptyline()
 
-%emptyline()
-%emptyline()
 %smallcredits("OBJECT DESIGNERS", "yellow")
 
 %blankline()
@@ -212,10 +224,8 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%emptyline()
 %smallcredits("BACK GROUND DESIGNERS", "yellow")
 
-%blankline()
 %blankline()
 
 %bigcredits("MASANAO ARIMOTO")
@@ -253,8 +263,6 @@ CreditsLineBlank:
 
 %blankline()
 %blankline()
-
-%emptyline()
 
 %smallcredits("PROGRAMMERS", "yellow")
 
@@ -315,7 +323,6 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%emptyline()
 %smallcredits("PRINTED ART WORK", "yellow")
 
 %blankline()
@@ -369,10 +376,9 @@ CreditsLineBlank:
 
 %blankline()
 
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
+; Pad with extra lines
+; Try to keep the padding equal after both credits sections
+rep 22 : %emptyline()
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -380,9 +386,8 @@ CreditsLineBlank:
 
 %blankline()
 %blankline()
+%emptyline()
 
-%emptyline()
-%emptyline()
 %smallcredits("ITEM RANDOMIZER", "yellow")
 
 %blankline()
@@ -408,13 +413,12 @@ CreditsLineBlank:
 
 %blankline()
 
-%bigcredits("KEVINCATHCART")
+%bigcredits("KEVINCATHCART    CASSIDYMOEN")
 
 %blankline()
 %blankline()
 
-%emptyline()
-%smallcredits("ENEMY RANDOMIZER", "yellow")
+%smallcredits("ENEMY RANDOMIZER", "red")
 
 %blankline()
 
@@ -427,57 +431,29 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%smallcredits("DOOR RANDOMIZER", "green")
+%smallcredits("DOOR RANDOMIZER", "yellow")
 
 %blankline()
 
-%bigcredits("AERINON             COMPILING")
-
-%blankline()
-%blankline()
-
-%smallcredits("FESTIVE RANDOMIZER", "yellow")
-
-%blankline()
-
-%bigcredits("KAN                    TOTAL")
-
-%blankline()
-
-%bigcredits("CATOBAT            DINSAPHIR")
+%bigcredits("AERINON            COMPILING")
 
 %blankline()
 %blankline()
 
-%smallcredits("SPRITE DEVELOPMENT", "green")
+%smallcredits("MULTIWORLD RANDOMIZER", "green")
+
+%blankline()
+
+%bigcredits("BONTA              CAITSITH2")
+
+%blankline()
+
+%bigcredits("BERSERKER66")
 
 %blankline()
 %blankline()
 
-%bigcredits("MIKETRETHEWEY         IBAZLY")
-
-%blankline()
-%bigcredits("FISH_WAFFLE64        KRELBEL")
-
-%blankline()
-
-%bigcredits("TWROXAS              ARTHEAU")
-
-%blankline()
-
-%bigcredits("GLAN               TARTHORON")
-
-%blankline()
-
-%smallcredits("YOUR SPRITE BY", "yellow")
-
-%addarbline(YourSpriteCreditsHi)
-%addarbline(YourSpriteCreditsLo)
-
-%blankline()
-%blankline()
-
-%smallcredits("MSU1 SUPPORT", "green")
+%smallcredits("MSU SUPPORT", "red")
 
 %blankline()
 
@@ -495,9 +471,43 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%smallcredits("SPECIAL THANKS", "red")
+%smallcredits("SPRITE DEVELOPMENT", "green")
 
 %blankline()
+
+%bigcredits("MIKETRETHEWEY         IBAZLY")
+
+%blankline()
+
+%bigcredits("FISH_WAFFLE64        KRELBEL")
+
+%blankline()
+
+%bigcredits("ACHY                 ARTHEAU")
+
+%blankline()
+
+%bigcredits("GLAN                 TWROXAS")
+
+%blankline()
+
+%bigcredits("PLAGUEDONE         TARTHORON")
+
+%blankline()
+%blankline()
+
+%smallcredits("YOUR SPRITE BY", "red")
+
+%blankline()
+
+%addarbline(YourSpriteCreditsHi)
+%addarbline(YourSpriteCreditsLo)
+
+%blankline()
+%blankline()
+
+%smallcredits("SPECIAL THANKS", "yellow")
+
 %blankline()
 
 %bigcredits("SUPERSKUJ          EVILASH25")
@@ -512,53 +522,17 @@ CreditsLineBlank:
 
 %blankline()
 
-%bigcredits("SAKURATSUBASA")
+%bigcredits("EMOSARU               PINKUS")
 
 %blankline()
 
-%bigcredits("AND...")
+%bigcredits("YUZUHARA       SAKURATSUBASA")
 
 %blankline()
 
-%bigcredits("THE ALTTP RANDOMIZER COMMUNITY")
-
-%blankline()
-%blankline()
-
-%smallcredits("COMMUNITY DISCORD", "green")
-
-%blankline()
-%blankline()
-
-%bigcredits("HTTPS://ALTTPR.COM/DISCORD")
-
-%blankline()
-
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
+; Pad with extra lines
+; Try to keep the padding equal after both credits sections
+rep 22 : %emptyline()
 
 ;===================================================================================================
 
@@ -578,57 +552,58 @@ endif
 
 ;===================================================================================================
 
+!STAT_TIME_X = 19
+!STAT_WITH_TOTAL_X = 23
+!STAT_OTHER_X = 26
+
 %smallcredits("THE IMPORTANT STUFF", "yellow")
 
 %blankline()
 %blankline()
-
 %emptyline()
+
 %smallcredits("TIME FOUND", "green")
 
 %blankline()
-%blankline()
 
-%bigcreditsleft("FIRST SWORD")
-
-%blankline()
-
-%bigcreditsleft("PEGASUS BOOTS")
+!FOUND_SWORD_LINE #= !CLINE+1 : %bigcreditsleft("FIRST SWORD")
 
 %blankline()
 
-%bigcreditsleft("FLUTE")
+!FOUND_BOOTS_LINE #= !CLINE+1 : %bigcreditsleft("PEGASUS BOOTS")
 
 %blankline()
 
-%bigcreditsleft("MIRROR")
+!FOUND_FLUTE_LINE #= !CLINE+1 : %bigcreditsleft("FLUTE")
+
+%blankline()
+
+!FOUND_MIRROR_LINE #= !CLINE+1 : %bigcreditsleft("MIRROR")
 
 %blankline()
 %blankline()
 
-%emptyline()
 %smallcredits("BOSS KILLS", "yellow")
 
 %blankline()
-%blankline()
 
-%bigcreditsleft("SWORDLESS                /13")
-
-%blankline()
-
-%bigcreditsleft("FIGHTER'S SWORD          /13")
+!BOSSES_SWORD_0_LINE #= !CLINE+1 : %bigcreditsleft("SWORDLESS                /13")
 
 %blankline()
 
-%bigcreditsleft("MASTER SWORD             /13")
+!BOSSES_SWORD_1_LINE #= !CLINE+1 : %bigcreditsleft("FIGHTER'S SWORD          /13")
 
 %blankline()
 
-%bigcreditsleft("TEMPERED SWORD           /13")
+!BOSSES_SWORD_2_LINE #= !CLINE+1 : %bigcreditsleft("MASTER SWORD             /13")
 
 %blankline()
 
-%bigcreditsleft("GOLD SWORD               /13")
+!BOSSES_SWORD_3_LINE #= !CLINE+1 : %bigcreditsleft("TEMPERED SWORD           /13")
+
+%blankline()
+
+!BOSSES_SWORD_4_LINE #= !CLINE+1 : %bigcreditsleft("GOLDEN SWORD             /13")
 
 %blankline()
 %blankline()
@@ -636,50 +611,47 @@ endif
 %smallcredits("GAME STATS", "red")
 
 %blankline()
-%blankline()
 
-%bigcreditsleft("GT BIG KEY               /22")
-
-%blankline()
-
-%bigcreditsleft("BONKS")
+!GT_BIG_KEY_LINE #= !CLINE+1 : %addarbline(GTBigKeyHi) : %addarbline(GTBigKeyLo)
 
 %blankline()
 
-%bigcreditsleft("SAVE AND QUITS")
+!CHEST_TURNS_LINE #= !CLINE+1 : %bigcreditsleft("CHEST TURNS")
 
 %blankline()
 
-%bigcreditsleft("DEATHS")
+!BOOTS_BONKS_LINE #= !CLINE+1 : %bigcreditsleft("BONKS")
 
 %blankline()
 
-%bigcreditsleft("FAERIE REVIVALS")
+!MIRROR_BONKS_LINE #= !CLINE+1 : %bigcreditsleft("MIRROR BONKS")
 
 %blankline()
 
-%bigcreditsleft("TOTAL MENU TIME")
+!SAVE_QUITS_LINE #= !CLINE+1 : %bigcreditsleft("SAVE AND QUITS")
 
 %blankline()
 
-%bigcreditsleft("TOTAL LAG TIME")
+!DEATHS_LINE #= !CLINE+1 : %bigcreditsleft("DEATHS")
+
+%blankline()
+
+!REVIVES_LINE #= !CLINE+1 : %bigcreditsleft("FAERIE REVIVALS")
+
+%blankline()
+
+!MENU_TIME_LINE #= !CLINE+1 : %bigcreditsleft("TOTAL MENU TIME")
+
+%blankline()
+
+!LAG_TIME_LINE #= !CLINE+1 : %bigcreditsleft("TOTAL LAG TIME")
 
 %blankline()
 %blankline()
-
-
 %blankline()
 %blankline()
-
-
 %blankline()
 %blankline()
-
-
-%blankline()
-%blankline()
-
-
 %blankline()
 
 %emptyline()
@@ -687,11 +659,27 @@ endif
 %emptyline()
 %emptyline()
 %emptyline()
-%bigcreditsleft("COLLECTION RATE         /216")
+
+;===================================================================================================
+
+if !CLINE > 379
+	error "Too many stats lines. !CLINE > 379"
+
+elseif !CLINE < 379
+	error "Too few stats lines. !CLINE < 379"
+
+endif
+
+;===================================================================================================
+
+!TOTAL_CHECKS_X = 22
+!TOTAL_TIME_X = 19
+
+!TOTAL_CHECKS_LINE #= !CLINE+1 : %addarbline(CollectionRateHi) : %addarbline(CollectionRateLo)
 
 %blankline()
 
-%bigcreditsleft("TOTAL TIME")
+!TOTAL_TIME_LINE #= !CLINE+1 : %bigcreditsleft("TOTAL TIME")
 
 %blankline()
 
@@ -703,40 +691,3 @@ endif
 %emptyline()
 
 ;---------------------------------------------------------------------------------------------------
-
-!FIRST_SWORD_X = 19
-!FIRST_SWORD_Y = 310
-!PEGASUS_BOOTS_X = 19
-!PEGASUS_BOOTS_Y = 313
-!FLUTE_X = 19
-!FLUTE_Y = 316
-!MIRROR_X = 19
-!MIRROR_Y = 319
-!SWORDLESS_X = 23
-!SWORDLESS_Y = 327
-!FIGHTERS_SWORD_X = 23
-!FIGHTERS_SWORD_Y = 330
-!MASTER_SWORD_X = 23
-!MASTER_SWORD_Y = 333
-!TEMPERED_SWORD_X = 23
-!TEMPERED_SWORD_Y = 336
-!GOLD_SWORD_X = 23
-!GOLD_SWORD_Y = 339
-!GT_BIG_KEY_X = 23
-!GT_BIG_KEY_Y = 346
-!BONKS_X = 26
-!BONKS_Y = 349
-!SAVE_AND_QUITS_X = 26
-!SAVE_AND_QUITS_Y = 352
-!DEATHS_X = 26
-!DEATHS_Y = 355
-!FAERIE_REVIVALS_X = 26
-!FAERIE_REVIVALS_Y = 358
-!TOTAL_MENU_TIME_X = 19
-!TOTAL_MENU_TIME_Y = 361
-!TOTAL_LAG_TIME_X = 19
-!TOTAL_LAG_TIME_Y = 364
-!COLLECTION_RATE_X = 22
-!COLLECTION_RATE_Y = 380
-!TOTAL_TIME_X = 19
-!TOTAL_TIME_Y = 383

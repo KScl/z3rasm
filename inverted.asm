@@ -234,7 +234,7 @@ MirrorBonk:
 	LDA $0C : ORA $0E
 JML.l MirrorBonk_NormalReturn
 .forceBonk
-JML.l MirrorBonk_BranchGamma
+JML.l IncrementMirrorBonkCounter ;also handles sending back
 
 .bonkRectanglesTable
    ;X1     X2      Y1      Y2

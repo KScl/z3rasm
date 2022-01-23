@@ -118,7 +118,9 @@
 ;--------------------------------------------------------------------------------
 ; $7EF46D - chest turn counter
 ;--------------------------------------------------------------------------------
-; $7EF46E - 7EF49F - Free space
+; $7EF46E - mirror bonk counter
+;--------------------------------------------------------------------------------
+; $7EF46F - 7EF49F - Free space
 ;--------------------------------------------------------------------------------
 ; $7EF4A0 - 7EF4A7 - Service Request
 ;--------------------------------------------------------------------------------
@@ -335,6 +337,17 @@ IncrementChestTurnCounter:
 			LDA !CHESTTURN_COUNTER : INC : STA !CHESTTURN_COUNTER
 		+
 	PLA
+RTL
+;--------------------------------------------------------------------------------
+!MIRRORBONK_COUNTER = "$7EF46E"
+IncrementMirrorBonkCounter:
+	LDA !LOCK_STATS : BNE +
+		LDA !MIRRORBONK_COUNTER : INC : STA !MIRRORBONK_COUNTER
+	+
+	; pushing/pulling accumulator to stack unnecessary as the code we wrote over
+	; immediately writes to it anyway
+	LDA.b #$2C ; part of what we wrote over
+	JML.l MirrorBonk_SendBack ; other part of what we wrote over, handles sending link back
 RTL
 ;--------------------------------------------------------------------------------
 !CHEST_COUNTER = "$7EF442"
