@@ -13,7 +13,7 @@ MAKEOUTDIR=@mkdir -p $(@D)
 
 BASEASM=LTTP_RND_GeneralBugfixes.asm
 
-$(OUTPUTROM): *.asm
+$(OUTPUTROM): *.asm stats/*.asm
 	$(MAKEOUTDIR)
 	cp $(SOURCEROM) $(OUTPUTROM)
 	$(ASAR) $(BASEASM) $(OUTPUTROM)

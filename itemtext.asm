@@ -1,4 +1,4 @@
-table dialogcharmap.txt
+table textmaps/dialog.map
 
 org $328000
 Notice_MapOf:

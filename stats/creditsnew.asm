@@ -24,7 +24,7 @@ CreditsLineTable:
 
 macro smallcredits(text, color)
 	!CLINE #= !CLINE+1
-	table "creditscharmapsmall_<color>.txt"
+	table "textmaps/credit_s_<color>.map"
 
 	?line:
 		db (32-(?end-?text))/2
@@ -42,7 +42,7 @@ endmacro
 ;---------------------------------------------------------------------------------------------------
 macro bigcredits(text)
 	!CLINE #= !CLINE+1
-	table "creditscharmapbighi.txt"
+	table "textmaps/credit_b_hi.map"
 
 	?line_top:
 		db (32-(?end-?text))/2
@@ -56,7 +56,7 @@ macro bigcredits(text)
 	pullpc
 
 
-	table "creditscharmapbiglo.txt"
+	table "textmaps/credit_b_lo.map"
 	?line_bottom:
 		db (32-(?end-?text))/2
 		db 2*(?end-?text)-1
@@ -74,7 +74,7 @@ endmacro
 
 macro bigcreditsleft(text)
 	!CLINE #= !CLINE+1
-	table "creditscharmapbighi.txt"
+	table "textmaps/credit_b_hi.map"
 
 	?line_top:
 		db 2
@@ -88,7 +88,7 @@ macro bigcreditsleft(text)
 	pullpc
 
 
-	table "creditscharmapbiglo.txt"
+	table "textmaps/credit_b_lo.map"
 	?line_bottom:
 		db 2
 		db 2*(?end-?text)-1
@@ -486,7 +486,7 @@ CreditsLineBlank:
 %blankline()
 %blankline()
 
-%smallcredits("PALETTE SHUFFLER", "YELLOW")
+%smallcredits("PALETTE SHUFFLER", "yellow")
 
 %blankline()
 
