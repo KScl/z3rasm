@@ -157,17 +157,20 @@ DrawPlayerFileShared:
 	JSR FileSelectDrawHudBar
 
 	; Bow
-	LDA.l !FS_INVENTORY_SWAP_2 : AND.w #$0040 : BEQ +
-		LDA $700340 : AND.w #$00FF : BEQ ++
-			%fs_drawItem(3,12,FileSelectItems_silver_bow)
-			BRA .bow_end
-		++
-		%fs_drawItem(3,12,FileSelectItems_silver_arrow)
-		BRA .bow_end
+	LDA $700340 : AND.w #$00FF : BEQ ++ ; Has the bow
+		LDA.l !FS_INVENTORY_SWAP_2 : AND.w #$0040 : BEQ + ; Has silvers
+			%fs_drawItem(3,12,FileSelectItems_silver_bow) : BRA .bow_end
+		+
+		LDA.l !FS_INVENTORY_SWAP_2 : AND.w #$0080 : BEQ + ; Has wooden
+			%fs_drawItem(3,12,FileSelectItems_bow) : BRA .bow_end
+		+
+		%fs_drawItem(3,12,FileSelectItems_empty_bow) : BRA .bow_end
+	++
+	LDA.l !FS_INVENTORY_SWAP_2 : AND.w #$0040 : BEQ + ; Has silvers (without bow)
+		%fs_drawItem(3,12,FileSelectItems_silver_arrow) : BRA .bow_end
 	+
-	LDA.l $700340 : AND.w #$00FF : BEQ +
-		%fs_drawItem(3,12,FileSelectItems_bow)
-		BRA .bow_end
+	LDA.l !FS_INVENTORY_SWAP_2 : AND.w #$0080 : BEQ + ; Has wooden (without bow)
+		%fs_drawItem(3,12,FileSelectItems_regular_arrow) : BRA .bow_end
 	+
 	%fs_drawItemGray(3,12,FileSelectItems_bow)
 	.bow_end
@@ -262,8 +265,15 @@ DrawPlayerFileShared:
 	; Cape
 	%fs_drawItemBasic($700352,9,18,FileSelectItems_cape)
 
-	; Mirror
-	%fs_drawItemBasic($700353,9,20,FileSelectItems_mirror)
+	; Mirror / DR Fake Mirror
+	LDA.l $700353 : AND #$0002 : BEQ +
+		%fs_drawItem(9,20,FileSelectItems_mirror) : BRA ++
+	+
+	LDA.l $700353 : AND #$0001 : BEQ +
+		%fs_drawItem(9,20,FileSelectItems_fake_mirror) : BRA ++
+	+
+		%fs_drawItemGray(9,20,FileSelectItems_mirror)
+	++
 
 	; Bottles
 	%fs_drawBottle($70035C,3,23)
@@ -441,7 +451,7 @@ FileSelectItems:
 	.silver_bow
 	dw #$0201|!FS_COLOR_YELLOW, #$0204|!FS_COLOR_YELLOW, #$0203|!FS_COLOR_RED, #$0212|!FS_COLOR_YELLOW
 	.regular_arrow ;for an eventual update for retro mode
-	dw #$0200|!FS_COLOR_YELLOW, #$02BA|!FS_COLOR_YELLOW, #$02B9|!FS_COLOR_RED, #$0200|!FS_COLOR_YELLOW
+	dw #$0200|!FS_COLOR_YELLOW, #$02BA|!FS_COLOR_YELLOW, #$02B9|!FS_COLOR_YELLOW, #$0200|!FS_COLOR_YELLOW
 	.silver_arrow
 	dw #$0200|!FS_COLOR_YELLOW, #$0214|!FS_COLOR_YELLOW, #$0213|!FS_COLOR_RED, #$0200|!FS_COLOR_YELLOW
 	.blue_boomerang
@@ -484,6 +494,9 @@ FileSelectItems:
 	dw #$0248|!FS_COLOR_RED, #$0249|!FS_COLOR_RED, #$0258|!FS_COLOR_RED, #$0259|!FS_COLOR_RED
 	.mirror
 	dw #$024A|!FS_COLOR_BLUE, #$024B|!FS_COLOR_BLUE, #$025A|!FS_COLOR_BLUE, #$025B|!FS_COLOR_BLUE
+	.fake_mirror ; for door randomizer
+	dw #$0282|!FS_COLOR_YELLOW, #$0283|!FS_COLOR_YELLOW, #$0292|!FS_COLOR_YELLOW, #$0293|!FS_COLOR_YELLOW
+
 
 	.flippers
 	dw #$020E|!FS_COLOR_BLUE, #$020F|!FS_COLOR_BLUE, #$021F|!FS_COLOR_BLUE|!FS_HFLIP, #$021F|!FS_COLOR_BLUE
