@@ -1,31 +1,4 @@
 ;===================================================================================================
-; WRITTEN BY THE RANDOMIZER
-;===================================================================================================
-table "textmaps/credit_b_hi.map"
-YourSpriteCreditsHi:
-db 2, 55 : db "                            " ; $238002
-
-table "textmaps/credit_b_lo.map"
-YourSpriteCreditsLo:
-db 2, 55 : db "                            " ; $238020
-
-table "textmaps/credit_b_hi.map"
-GTBigKeyHi:
-db 2, 55 : db "GT BIG KEY               /22" ; Counter at $238058
-
-table "textmaps/credit_b_lo.map"
-GTBigKeyLo: 
-db 2, 55 : db "GT BIG KEY               /22" ; Counter at $238076
-
-table "textmaps/credit_b_hi.map"
-CollectionRateHi:
-db 2, 55 : db "COLLECTION RATE         /216" ; Counter at $238093
-
-table "textmaps/credit_b_lo.map"
-CollectionRateLo: 
-db 2, 55 : db "COLLECTION RATE         /216" ; Counter at $2380B1
-
-;===================================================================================================
 
 CreditsLineTable:
 	fillword CreditsLineBlank : fill 800
@@ -378,7 +351,7 @@ CreditsLineBlank:
 
 ; Pad with extra lines
 ; Try to keep the padding equal after both credits sections
-rep 22 : %emptyline()
+rep 16 : %emptyline()
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -532,29 +505,29 @@ rep 22 : %emptyline()
 
 ; Pad with extra lines
 ; Try to keep the padding equal after both credits sections
-rep 22 : %emptyline()
+rep 16 : %emptyline()
 
 ;===================================================================================================
 
-print "Line number: !CLINE | Expected: 302"
+print "Line number: !CLINE | Expected: 290"
 
-if !CLINE > 302
-	error "Too many credits lines. !CLINE > 302"
+if !CLINE > 290
+	error "Too many credits lines. !CLINE > 290"
 
-elseif !CLINE < 302
-	warn "Too few credits lines. !CLINE < 302; Adding additional empties for alignment."
+elseif !CLINE < 290
+	warn "Too few credits lines. !CLINE < 290; Adding additional empties for alignment."
 
 endif
 
 
 ; Set line always to line up with stats
-!CLINE #= 302
+!CLINE #= 290
 
 ;===================================================================================================
 
 !STAT_TIME_X = 19
-!STAT_WITH_TOTAL_X = 23
-!STAT_OTHER_X = 26
+!STAT_WITH_TOTAL_X = 22
+!STAT_OTHER_X = 25
 
 %smallcredits("THE IMPORTANT STUFF", "yellow")
 
@@ -612,10 +585,6 @@ endif
 
 %blankline()
 
-!GT_BIG_KEY_LINE #= !CLINE+1 : %addarbline(GTBigKeyHi) : %addarbline(GTBigKeyLo)
-
-%blankline()
-
 !CHEST_TURNS_LINE #= !CLINE+1 : %bigcreditsleft("CHEST TURNS")
 
 %blankline()
@@ -648,17 +617,25 @@ endif
 
 %blankline()
 %blankline()
-%blankline()
-%blankline()
-%blankline()
-%blankline()
+
+%smallcredits("EXTRA STATS", "green")
+
 %blankline()
 
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
-%emptyline()
+%addarbline(ExtraStat1Hi) : %addarbline(ExtraStat1Lo) ; 357
+
+%blankline()
+
+%addarbline(ExtraStat2Hi) : %addarbline(ExtraStat2Lo) ; 360
+
+%blankline()
+
+%addarbline(ExtraStat3Hi) : %addarbline(ExtraStat3Lo) ; 363
+
+%blankline()
+
+; Pad with extra lines
+rep 14 : %emptyline()
 
 ;===================================================================================================
 
@@ -672,7 +649,7 @@ endif
 
 ;===================================================================================================
 
-!TOTAL_CHECKS_X = 22
+!TOTAL_CHECKS_X = 21
 !TOTAL_TIME_X = 19
 
 !TOTAL_CHECKS_LINE #= !CLINE+1 : %addarbline(CollectionRateHi) : %addarbline(CollectionRateLo)

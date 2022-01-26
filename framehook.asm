@@ -19,6 +19,10 @@
 ; $7EF446w[2] - item menu frame counter (high)
 !ITEM_FRAMES_HIGH = "$7EF446"
 ;--------------------------------------------------------------------------------
+!CLOCK_STATUS = "$7F507E"
+!DNF_FRAMES_LOW = "$7EF49C"
+!DNF_FRAMES_HIGH = "$7EF49E"
+;--------------------------------------------------------------------------------
 !LOCK_STATS = "$7EF443"
 FrameHookAction:
 	JSL $0080B5 ; Module_MainRouting
@@ -70,6 +74,11 @@ NMIHookAction:
 	LDA !LOCK_STATS : AND.w #$00FF : BNE ++
 		LDA !NMI_FRAMES_LOW : INC : STA !NMI_FRAMES_LOW : BNE +
 			LDA !NMI_FRAMES_HIGH : INC : STA !NMI_FRAMES_HIGH
+		+
+		; moved to NMI to be more accurate, hopefully doesn't add to lag (much)
+		LDA !CLOCK_STATUS : BEQ +
+		LDA !DNF_FRAMES_LOW : INC : STA !DNF_FRAMES_LOW : BNE +
+			LDA !DNF_FRAMES_HIGH : INC : STA !DNF_FRAMES_HIGH
 		+
 	++
 	

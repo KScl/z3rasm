@@ -5,6 +5,9 @@ lorom
 !BLT = "BCC"
 !BGE = "BCS"
 
+org $23F000 ; given a consistent location for ease of modification
+incsrc stats/customtext.asm
+
 org $238000
 incsrc stats/creditsnew.asm
 
@@ -22,7 +25,6 @@ FontGfxEnd:
 !Hours = $72        ; 2 bytes
 !Minutes = $74      ; 2 bytes
 !Seconds = $76      ; 2 bytes
-!RemoveZero = $78   ; 2 bytes
 
 
 ; Original addresses
@@ -60,6 +62,7 @@ ValueCaps:
     dw 99
     dw 999
     dw 9999
+    dw 65535
 
 BitMasks:
     dw $FFFF
@@ -217,7 +220,7 @@ endmacro
 
 !ColonOffset = $83
 !PeriodOffset = $80
-!BlankTile = $883D
+!BlankTile = #$883D ; Previously an address, seemed wrong?
 
 RenderCreditsStatCounter:
     PHB
@@ -250,7 +253,7 @@ RenderCreditsStatCounter:
     STA $1002,x
     
     ; == Write Stripe header (Length of data) ==
-    LDA.w #4*2-1    ; 4 tiles = 8 bytes
+    LDA.w #5*2-1    ; 5 tiles = 10 bytes
     XBA
     STA $1004,x
     PHX
@@ -308,47 +311,18 @@ RenderCreditsStatCounter:
     LDA !ValueLow
     JSL HexToDecStats
     PLX
-    STZ !RemoveZero
-    
-    LDA $7F5004
-    AND #$00FF
-    CMP !RemoveZero
-    BNE +
-    LDA !BlankTile
-    BRA ++
-+   DEC !RemoveZero
-    CLC
-    ADC !Temp
-++  %StripeTile()
-    
-    LDA $7F5005
-    AND #$00FF
-    CMP !RemoveZero
-    BNE +
-    LDA !BlankTile
-    BRA ++
-+   DEC !RemoveZero
-    CLC
-    ADC !Temp
-++  %StripeTile()
-    
-    LDA $7F5006
-    AND #$00FF
-    CMP !RemoveZero
-    BNE +
-    LDA !BlankTile
-    BRA ++
-+   DEC !RemoveZero
-    CLC
-    ADC !Temp
-++  %StripeTile()
-    
-    LDA $7F5007
-    AND #$00FF
-    CLC
-    ADC !Temp
-    %StripeTile()
-    
+
+    LDA $7F5003 : AND #$000F : BNE .5_digit : LDA !BlankTile : %StripeTile()
+    LDA $7F5004 : AND #$000F : BNE .4_digit : LDA !BlankTile : %StripeTile()
+    LDA $7F5005 : AND #$000F : BNE .3_digit : LDA !BlankTile : %StripeTile()
+    LDA $7F5006 : AND #$000F : BNE .2_digit : LDA !BlankTile : %StripeTile()
+    LDA $7F5007 : AND #$000F : BRA .1_digit
+                               .5_digit : CLC : ADC !Temp : %StripeTile()
+    LDA $7F5004 : AND #$000F : .4_digit : CLC : ADC !Temp : %StripeTile()
+    LDA $7F5005 : AND #$000F : .3_digit : CLC : ADC !Temp : %StripeTile()
+    LDA $7F5006 : AND #$000F : .2_digit : CLC : ADC !Temp : %StripeTile()
+    LDA $7F5007 : AND #$000F : .1_digit : CLC : ADC !Temp : %StripeTile()
+
     %StripeEnd()
 .endStats
 
@@ -630,9 +604,11 @@ RTS
 FontTable:
     incbin stats/fonttable.bin
 
+warnpc $23F000 ; earlier tables
+
+org $23F800 ; given a consistent location for ease of modification
 CreditsStats:
 incsrc stats/statConfig.asm
-dw $FFFF
 
 org $0eedd9
     JSL EndingItems
