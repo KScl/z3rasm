@@ -149,7 +149,6 @@ incsrc map.asm
 incsrc msu.asm
 incsrc dialog.asm
 incsrc entrances.asm
-incsrc clock.asm
 incsrc accessability.asm
 incsrc heartbeep.asm
 incsrc capacityupgrades.asm
@@ -180,6 +179,7 @@ org $A1FF00 ; static mapping area
 incsrc init.asm
 
 org $A48000 ; code bank - PUT NEW CODE HERE
+incsrc clock.asm ;is this completely unused?
 incsrc timer.asm
 incsrc doorframefixes.asm
 incsrc music.asm

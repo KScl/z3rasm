@@ -577,21 +577,28 @@ Shopkeeper_BuyItem:
 			LDA #$1 : STA !SHOP_KEEP_REFILL ; If this is on, don't toggle bit to remove from shop
 		+
 
-		LDA !SHOP_TYPE : AND.b #$80 : BNE .buy ; don't charge if this is a take-any
+		LDA !SHOP_TYPE : AND.b #$80 : BNE .check_take_any ; don't charge if this is a take-any
 		REP #$20 : LDA $7EF360 : CMP.l !SHOP_INVENTORY+1, X : SEP #$20 : !BGE .buy
 		
 		.cant_afford
-	        LDA.b #$7A
-	        LDY.b #$01
-	        JSL.l Sprite_ShowMessageUnconditional
+			LDA.b #$7A : LDY.b #$01 : JSL.l Sprite_ShowMessageUnconditional
 			LDA.b #$3C : STA $012E ; error sound
 			BRL .done
-			.full_bottles
-				LDA.b #$6B
-				LDY.b #$01
-				JSL.l Sprite_ShowMessageUnconditional
-				LDA.b #$3C : STA $012E ; error sound
-				BRL .done
+		.full_bottles
+			LDA.b #$6B : LDY.b #$01 : JSL.l Sprite_ShowMessageUnconditional
+			LDA.b #$3C : STA $012E ; error sound
+			BRL .done
+
+		.check_take_any
+			LDA !SHOP_TYPE : AND.b #$08 : BEQ .buy
+			; old man sword cave -- check hearts
+			JSR CheckSwordCaveHearts : BCC .buy
+
+			; not enough hearts
+			CLC : LDA.b #$97 : LDY.b #$01 : JSL.l Sprite_ShowMessageUnconditional
+			LDA.b #$3C : STA $012E ; error sound
+			BRL .done
+
 		.buy
 			LDA !SHOP_TYPE : AND.b #$80 : BNE ++ ; don't charge if this is a take-any
 				REP #$20 : LDA $7EF360 : !SUB !SHOP_INVENTORY+1, X : STA $7EF360 : SEP #$20 ; Take price away
@@ -1030,4 +1037,26 @@ RTS
 ;dw 56, 56 : db $33, $02, $00, $00
 ;dw 64, 56 : db $30, $02, $00, $00
 ;dw 72, 56 : db $31, $02, $00, $00
+;--------------------------------------------------------------------------------
+; Returns heart requirement in A
+GetSwordCaveHearts:
+	LDA.l !SHOP_INVENTORY, X
+	    CMP.b #$5E : BNE + : LDA.l $7EF359    ; Progressive Sword -- load in current sword
+	+ : CMP.b #$50 : BNE + : LDA #$30 : RTS   ; Master Sword (safe)
+	+ : CMP.b #$01 : BNE + : LDA #$30 : RTS   ; Master Sword
+	+ : CMP.b #$02 : BNE + : LDA #$50 : RTS   ; Tempered Sword
+	+ : CMP.b #$03 : BNE + : LDA #$80 : RTS   ; Golden Sword
+	+ : LDA #$00 : RTS                        ; Fighter's Sword or something else
+
+; Returns carry set on fail, clear on pass
+CheckSwordCaveHearts:
+	LDA $00 : PHA ; Use $00 for our own purposes, we'll put it back after
+
+	JSR GetSwordCaveHearts : STA $00
+	LDA $7EF36C : CMP $00 : !BLT ++ ; Load in player max health and compare
+	CLC : BRA + ; Set enough hearts
+	++
+	SEC ; Set not enough hearts
+	+
+	PLA : STA $00 : RTS ; Restore $00 before returning
 ;--------------------------------------------------------------------------------
