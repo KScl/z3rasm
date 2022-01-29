@@ -9,8 +9,8 @@ SEP #$30
 	LDA !INFINITE_BOMBS : BNE .infinite_bombs
 	.finite_bombs
 		LDA.l $7EF343 ; bombs
-		JSR HudHexToDec2Digit ;requires 8 bit registers!
 		REP #$20
+		JSR HudHexToDec2Digit ; Now uses 16-bit A
 		LDX.b $06 : TXA : ORA.w #$2400 : STA !BOMBCOUNT_DRAW_ADDRESS ; Draw bombs 10 digit
 		LDX.b $07 : TXA : ORA.w #$2400 : STA !BOMBCOUNT_DRAW_ADDRESS+2 ; Draw bombs 1 digit
 		BRA +
@@ -44,8 +44,8 @@ SEP #$30
 		LDA !INFINITE_ARROWS : BNE .infinite_arrows
 		.finite_arrows
 			LDA.l $7EF377 ; arrows
-			JSR HudHexToDec2Digit
 			REP #$20
+			JSR HudHexToDec2Digit
 			LDX.b $06 : TXA : ORA.w #$2400 : STA !ARROWCOUNT_DRAW_ADDRESS ; Draw arrows 10 digit
 			LDX.b $07 : TXA : ORA.w #$2400 : STA !ARROWCOUNT_DRAW_ADDRESS+2 ; Draw arrows  1 digit
 			BRA +
@@ -119,7 +119,8 @@ SEP #$30
 	SEP #$20
 	LDA.l !KEYS : CMP.b #$FF : BEQ .not_in_dungeon
 		.in_dungeon
-		JSR HudHexToDec2Digit : REP #$20
+		REP #$20
+		JSR HudHexToDec2Digit
 		
 		; if 10s digit is 0, draw transparent tile instead of 0
 		LDX.b $06 : TXA : CPX.b #$90 : BNE +
@@ -237,78 +238,37 @@ RTL
 ; in:	A(b) - Byte to Convert
 ; out:	$04 - $07 (high - low)
 ;================================================================================
+!HW_DIV_DIVIDEND = "$004204"
+!HW_DIV_DIVISOR = "$004206"
+!HW_DIV_RESULT = "$004214"
+!HW_DIV_REMAINDER = "$004216"
 HudHexToDec4Digit:
-	LDY.b #$90
-	-
-		CMP.w #1000 : !BLT +
-		INY
-		SBC.w #1000 : BRA -
-	+
-	STY $04 : LDY #$90 ; Store 1000s digit & reset Y
-	-
-		CMP.w #100 : !BLT +
-		INY
-		SBC.w #100 : BRA -
-	+
-	STY $05 : LDY #$90 ; Store 100s digit & reset Y
-	-
-		CMP.w #10 : !BLT +
-		INY
-		SBC.w #10 : BRA -
-	+ 
-	STY $06 : LDY #$90 ; Store 10s digit & reset Y
-	CMP.w #1 : !BLT +
-	-
-		INY
-		DEC : BNE -
-	+
-	STY $07 ; Store 1s digit
+	STA.l !HW_DIV_DIVIDEND
+	SEP #$20 ; Set 8-bit accumulator
+	LDA #100 : STA.l !HW_DIV_DIVISOR ; Start HW division
+	REP #$20 : PHX : XBA : XBA : NOP #2 ; Set 16 bit accumulator, wait for division to finish
+
+	LDA.l !HW_DIV_RESULT : ASL : TAX ; Get value from HW result register (0-99), save to X
+	LDA HudDigitTable, X : STA $04
+	LDA.l !HW_DIV_REMAINDER : ASL : TAX ; Get value from HW result register (0-99), save to X
+	LDA HudDigitTable, X : STA $06
+	PLX
 RTS
 
 ;================================================================================
-; 8-bit registers
-; in:	A(b) - Byte to Convert
-; out:	$05 - $07 (high - low)
-;================================================================================
-HudHexToDec3Digit: ; this may be overkill, could have used the 4 digit one...
-	LDY.b #$90
-	-
-		CMP.b #100 : !BLT +
-		INY
-		SBC.b #100 : BRA -
-	+ 
-	STY $05 : LDY.b #$90 ; Store 100s digit and reset Y
-	-
-		CMP.b #10 : !BLT +
-		INY
-		SBC.b #10 : BRA -
-	+ 
-	STY $06 : LDY #$90 ; Store 10s digit and reset Y
-	CMP.b #1 : !BLT +
-	-
-		INY
-		DEC : BNE -
-	+
-	STY $07	; Store 1s digit
-RTS
-
-;================================================================================
-; 8-bit registers
+; 16-bit A, 8-bit X
 ; in:	A(b) - Byte to Convert
 ; out:	$06 - $07 (high - low)
 ;================================================================================
 HudHexToDec2Digit:
-	LDY.b #$90
-	-
-		CMP.b #10 : !BLT +
-		INY
-		SBC.b #10 : BRA -
-	+ 
-	STY $06 : LDY #$90 ; Store 10s digit and reset Y
-	CMP.b #1 : !BLT +
-	-
-		INY
-		DEC : BNE -
-	+
-	STY $07	; Store 1s digit
+	PHX
+	ASL : TAX : LDA HudDigitTable, X : STA $06
+	PLX
 RTS
+
+;--------------------------------------------------------------------------------
+; DR code is in a different bank but needs access too
+;--------------------------------------------------------------------------------
+HudHexToDec4DigitLong: JSR HudHexToDec4Digit : RTL
+HudHexToDec2DigitLong: JSR HudHexToDec2Digit : RTL
+;--------------------------------------------------------------------------------

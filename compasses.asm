@@ -15,18 +15,14 @@ DrawDungeonCompassCounts:
 	BNE +
 		INC
 	+ TAX : LDA.l CompassTotal, X : AND #$00FF
-	SEP #$20
 	JSR HudHexToDec2Digit
-	REP #$20
 	PHX
 		LDX.b $06 : TXA : ORA #$2400 : STA $7EC79A
 		LDX.b $07 : TXA : ORA #$2400 : STA $7EC79C
 	PLX
 
 	LDA $7EF4BF, X : AND #$00FF
-	SEP #$20
 	JSR HudHexToDec2Digit
-	REP #$20
 
 	LDX.b $06 : TXA : ORA #$2400 : STA $7EC794 ; Draw the item count
 	LDX.b $07 : TXA : ORA #$2400 : STA $7EC796

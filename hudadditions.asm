@@ -19,14 +19,14 @@ HudAdditions:
 	.debug_counter
 		LDA.w #$28A4 : STA !GOAL_DRAW_ADDRESS
 		lda $7EF423
-        jsr HudHexToDec4DigitCopy
+        JSL HudHexToDec4DigitLong
 		LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+2 ; draw 100's digit
 		LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+4 ; draw 10's digit
 		LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+6 ; draw 1's digit
 		LDA.w #$2830 : STA !GOAL_DRAW_ADDRESS+8 ; draw slash
 		LDA.l DRFlags : AND #$0100 : BNE +
         	lda $7EF33E
-			jsr HudHexToDec4DigitCopy
+			JSL HudHexToDec4DigitLong
 			LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+10 ; draw 100's digit
 			LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+12 ; draw 10's digit
 			LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+14 ; draw 1's digit
@@ -158,8 +158,8 @@ DrHudDungeonItemsAdditions:
                 phx ; total chest counts
                     txa : lsr : tax
                     sep #$30
-                    lda.l TotalLocations, x : !sub $7EF4BF, x : JSR HudHexToDec2DigitCopy
-                    rep #$30
+                    lda.l TotalLocations, x : !sub $7EF4BF, x 
+                    REP #$20 : JSL HudHexToDec2DigitLong : REP #$10
                     lda $06 : jsr ConvertToDisplay2 : sta $1644, y : iny #2
                     lda $07 : jsr ConvertToDisplay2 : sta $1644, y
                 plx
@@ -200,59 +200,3 @@ CountAbsorbedKeys:
         lsr : tax
         lda $7ef4b0, x : inc : sta $7ef4b0, x
     + plx : rtl
-
-;================================================================================
-; 16-bit A, 8-bit X
-; in:	A(b) - Byte to Convert
-; out:	$04 - $07 (high - low)
-;================================================================================
-HudHexToDec4DigitCopy:
-    LDY.b #$90
-    -
-        CMP.w #1000 : !BLT +
-        INY
-        SBC.w #1000 : BRA -
-    +
-    STY $04 : LDY #$90 ; Store 1000s digit & reset Y
-    -
-        CMP.w #100 : !BLT +
-        INY
-        SBC.w #100 : BRA -
-    +
-    STY $05 : LDY #$90 ; Store 100s digit & reset Y
-    -
-        CMP.w #10 : !BLT +
-        INY
-        SBC.w #10 : BRA -
-    +
-    STY $06 : LDY #$90 ; Store 10s digit & reset Y
-    CMP.w #1 : !BLT +
-    -
-        INY
-        DEC : BNE -
-    +
-    STY $07 ; Store 1s digit
-RTS
-
-;================================================================================
-; 8-bit registers
-; in:	A(b) - Byte to Convert
-; out:	$06 - $07 (high - low)
-;================================================================================
-HudHexToDec2DigitCopy: ; modified
-	PHY
-		LDY.b #$00
-		-
-			CMP.b #10 : !BLT +
-			INY
-			SBC.b #10 : BRA -
-		+
-		STY $06 : LDY #$00 ; Store 10s digit and reset Y
-		CMP.b #1 : !BLT +
-		-
-			INY
-			DEC : BNE -
-		+
-		STY $07	; Store 1s digit
-	PLY
-RTS
