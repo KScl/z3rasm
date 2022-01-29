@@ -219,6 +219,7 @@ incsrc multiworld.asm
 incsrc terrorpin.asm
 incsrc RandSprite.asm
 incsrc textrender.asm
+incsrc checkcount.asm
 print "End of Coda Bank $24: ", pc
 warnpc $A58000
 
