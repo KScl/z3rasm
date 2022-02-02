@@ -459,7 +459,7 @@ RTL
 ;================================================================================
 ; draw goals (pendants, crystals, possibly goal items)
 ;================================================================================
-!GOAL_ELDER = "$7EF41A"
+!GOAL_SHOW_TOTAL = "$7EF41A" ; ---- ---g
 !GOAL_COUNTER = "$7EF418"
 ;--------------------------------------------------------------------------------
 ; green pendant: $04
@@ -493,10 +493,10 @@ DrawGoalHUD:
 	REP #$30 ; Set 16-bit accumulator & index registers
 
 	; check for triforce hunt, etc.
-	LDA.l GoalItemRequirement : BEQ DrawPendantCrystalDiagram                ; show standard display if no goal items
-	LDA.l !GOAL_ELDER : AND.w #$00FF : BEQ + : JMP DrawGoalItemDiagram : +   ; show goal item display if the elder was visited
-	LDA.l GoalItemFlags : AND.w #$0001 : BNE + : JMP DrawGoalItemDiagram : + ; show goal item display if we haven't been told to hide it
-	LDA.l !GOAL_COUNTER : BEQ + : JMP DrawGoalItemDiagram : +                ; show goal item display if we have, but have found a goal item
+	LDA.l GoalItemRequirement : BEQ DrawPendantCrystalDiagram                   ; show standard display if no goal items
+	LDA.l !GOAL_SHOW_TOTAL : AND.w #$00FF : BEQ + : JMP DrawGoalItemDiagram : + ; show goal item display if the elder was visited
+	LDA.l GoalItemFlags : AND.w #$0001 : BNE + : JMP DrawGoalItemDiagram : +    ; show goal item display if we haven't been told to hide it
+	LDA.l !GOAL_COUNTER : BEQ + : JMP DrawGoalItemDiagram : +                   ; show goal item display if we have, but have found a goal item
 	; otherwise, fall through to the standard display
 
 ;================================================================================
@@ -593,7 +593,7 @@ DrawGoalItemDiagram:
 
 	LDA !GOAL_COUNTER : %draw3digit($1470) ; draw total goal items collected
 
-	LDA.l !GOAL_ELDER : AND.w #$FF : BNE + 
+	LDA.l !GOAL_SHOW_TOTAL : AND.w #$FF : BNE + 
 	LDA.l GoalItemFlags : AND.w #$0002 : BNE ++
 	+ : LDA.l GoalItemRequirement : CMP #$FFFF : BEQ ++
 	%draw3digit($14B6) ; draw goal items required

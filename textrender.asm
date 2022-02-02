@@ -1,5 +1,10 @@
 pushpc
 
+org $0eefd0 ; vwf.asm:277
+TextIgnoreParamCommand:
+org $0ef852 ; vwf.asm:1977
+RenderIgnoreCommand:
+
 ; -----------------------------------------------------------------------------
 ; Overwrite old function for drawing a segment of a character
 ; -----------------------------------------------------------------------------
@@ -55,8 +60,6 @@ org $0efd7c ; Render width table
 ; Patch jump-to-data out of text commands,
 ; replace with a command to erase part of the dialog window for cursor movement
 ; -----------------------------------------------------------------------------
-org $0ef234
-	dw RenderClearCursor
 org $0efd80
 RenderClearCursor:
 {
@@ -75,7 +78,32 @@ RenderClearCursor:
     STZ $1CDD : INC $1CD9 : SEP #$30 : STZ $1CE6 ; Move text pointer
 	RTS
 }
+; -----------------------------------------------------------------------------
+; Patch unused command 7B to set text flags
+; -----------------------------------------------------------------------------
+TextSetGameFlags:
+{
+	REP #$10
+	LDY $1CDD : INY ; Move text pointer to command byte
+	LDA !TEXT_FLAGS : ORA [$04], Y : STA !TEXT_FLAGS
+	INY : STY $1CDD ; Move text pointer past command byte and save
+
+	; unlike the US VWF code, which expects 8-bit A and 16 bit XY
+	; it seems the JPN "VWF" code expects us to return with 16-bit A & XY set
+	REP #$20
+	RTS
+}
 warnpc $f0000
+; -----------------------------------------------------------------------------
+; Update jump tables
+; -----------------------------------------------------------------------------
+org $0eefad
+	dw TextSetGameFlags
+; -----------------------------------------------------------------------------
+org $0ef234
+	dw RenderClearCursor
+org $0ef24a
+	dw RenderIgnoreCommand
 ; -----------------------------------------------------------------------------
 ; Hook to make lowercase letters render, replacing kanji
 ; -----------------------------------------------------------------------------

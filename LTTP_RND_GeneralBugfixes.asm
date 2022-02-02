@@ -42,16 +42,16 @@ db #$20, #$19, #$08, #$31 ; year/month/day
 !NPC_FLAGS   = "$7EF410"
 !NPC_FLAGS_2 = "$7EF411"
 !MAP_OVERLAY = "$7EF414" ; [w]
-!PROGRESSIVE_SHIELD = "$7EF416" ; ss-- ----
-!HUD_FLAG = "$7EF416" ; --h- ----
-!FORCE_PYRAMID = "$7EF416" ; ---- p---
-!IGNORE_FAIRIES = "$7EF416" ; ---- -i--
-!SHAME_CHEST = "$7EF416" ; ---s ----
-!HAS_GROVE_ITEM = "$7EF416" ; ---- ---g general flags, don't waste these
-!HIGHEST_SWORD_LEVEL = "$7EF417" ; --- -sss
-;$7EF41A[w] - Programmable Item #1
-;$7EF41C[w] - Programmable Item #2
-;$7EF41E[w] - Programmable Item #3
+!PROGRESSIVE_SHIELD = "$7EF416"  ; ss-- ----
+!HUD_FLAG = "$7EF416"            ; --h- ----
+!FORCE_PYRAMID = "$7EF416"       ; ---- p---
+!IGNORE_FAIRIES = "$7EF416"      ; ---- -i--
+!SHAME_CHEST = "$7EF416"         ; ---s ----
+!HAS_GROVE_ITEM = "$7EF416"      ; ---- ---g general flags, don't waste these
+!HIGHEST_SWORD_LEVEL = "$7EF417" ; ---- -sss
+; ---- ---g
+; g: Show Goal Items Total (talked to elder / goal sign)
+!TEXT_FLAGS = "$7EF41A"
 !SRAM_SINK = "$7EF41E" ; <- change this (conflicts with Programmable item 3)
 ;$7EF418 - Goal Item Counter
 ;$7EF419 - Service Sequence
