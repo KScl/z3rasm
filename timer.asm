@@ -124,56 +124,58 @@ dw #$003C, #$0000
 dw #$FFFF, #$7FFF
 ;--------------------------------------------------------------------------------
 !TEMPORARY_OHKO = "$7F50CC"
+!TIMER_LOCATION = "$7EC792" ;"$7EC728"
 DrawChallengeTimer:
-	LDA !TEMPORARY_OHKO : AND.w #$00FF : BEQ +
-    	LDA.w #$2807 : STA $7EC790
-		LDA.w #$280A : STA $7EC792
-		LDA.w #$280B : STA $7EC794
-		LDA.w #$280C : STA $7EC796
-		RTL
-	+
-    	LDA.w #$247F : STA $7EC790
-					   STA $7EC792
-					   STA $7EC794
-					   STA $7EC796
-	++
+	; only used for crowd control
+	; probably other, better ways to tell it's on through CC itself
+	;LDA !TEMPORARY_OHKO : AND.w #$00FF : BEQ +
+    ;	LDA.w #$2807 : STA $7EC790
+	;	LDA.w #$280A : STA $7EC792
+	;	LDA.w #$280B : STA $7EC794
+	;	LDA.w #$280C : STA $7EC796
+	;	RTL
+	;+
+    ;	LDA.w #$247F : STA $7EC790
+	;				   STA $7EC792
+	;				   STA $7EC794
+	;				   STA $7EC796
+	;++
 	
 	LDA.l TimerStyle : BNE + : RTL : + ; Hud Timer
-    	LDA.w #$2807 : STA $7EC792
-    	
-    	LDA.l !Status : AND.w #$0002 : BEQ + ; DNF / OKHO
-    	
-			LDA.l TimeoutBehavior : AND.w #$00FF : BNE ++ ; DNF
-				LDA.w #$2808 : STA $7EC794
-				LDA.w #$2809 : STA $7EC796
-				LDA.w #$247F : STA $7EC798
-				STA $7EC79A
-				BRA +++
-			++ ; OHKO
-				LDA.w #$280A : STA $7EC794
-				LDA.w #$280B : STA $7EC796
-				LDA.w #$280C : STA $7EC798
-				LDA.w #$247F : STA $7EC79A
-			+++
-			STA $7EC79C
-			STA $7EC79E
-			STA $7EC7A0
-			STA $7EC7A2
-			STA $7EC7A4
-			LDA.l TimerRestart : BNE +++ : RTL : +++
-			BRA ++
-		+ ; Show Timer
-	    	LDA.l !Status : AND.w #$0001 : !ADD.w #$2804 : STA $7EC794
-			LDA !CLOCK_HOURS+2 : STA $7EC796
-			LDA !CLOCK_HOURS : STA $7EC798
-	    	LDA.w #$2806 : STA $7EC79A
-			LDA !CLOCK_MINUTES+2 : STA $7EC79C
-			LDA !CLOCK_MINUTES : STA $7EC79E
-	    	LDA.w #$2806 : STA $7EC7A0
-			LDA !CLOCK_SECONDS+2 : STA $7EC7A2
-			LDA !CLOCK_SECONDS : STA $7EC7A4
-		++
-		LDA $1A : AND.w #$001F : BNE + : JSR CalculateTimer : +
+
+	LDA.w #$2807 : STA !TIMER_LOCATION
+
+	LDA.l !Status : AND.w #$0002 : BEQ .regular_timer 
+		LDA.l TimeoutBehavior : AND.w #$00FF : BEQ .dnf
+		.ohko
+			LDA.w #$280A : STA !TIMER_LOCATION+2
+			INC          : STA !TIMER_LOCATION+4
+			INC          : STA !TIMER_LOCATION+6
+			LDA.w #$247F : BRA +
+		.dnf
+			LDA.w #$2808 : STA !TIMER_LOCATION+2
+			INC          : STA !TIMER_LOCATION+4
+			LDA.w #$247F : STA !TIMER_LOCATION+6
+		+
+		STA !TIMER_LOCATION+8
+		STA !TIMER_LOCATION+10
+		STA !TIMER_LOCATION+12
+		STA !TIMER_LOCATION+14
+		STA !TIMER_LOCATION+16
+		STA !TIMER_LOCATION+18
+		LDA.l TimerRestart : BNE + : RTL : +
+		BRA ++
+	.regular_timer ; Show Timer
+		LDA.w #$2806 : STA !TIMER_LOCATION+8 : STA !TIMER_LOCATION+14 ; Draw colons
+		LDA.l !Status : AND.w #$0001 : !ADD.w #$2804 : STA !TIMER_LOCATION+2 ; Draw +/-
+		LDA !CLOCK_HOURS+2   : STA !TIMER_LOCATION+4
+		LDA !CLOCK_HOURS     : STA !TIMER_LOCATION+6
+		LDA !CLOCK_MINUTES+2 : STA !TIMER_LOCATION+10
+		LDA !CLOCK_MINUTES   : STA !TIMER_LOCATION+12
+		LDA !CLOCK_SECONDS+2 : STA !TIMER_LOCATION+16
+		LDA !CLOCK_SECONDS   : STA !TIMER_LOCATION+18
+	++
+	LDA $1A : AND.w #$001F : BNE + : JSR CalculateTimer : +
 
 RTL
 ;--------------------------------------------------------------------------------

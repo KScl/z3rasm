@@ -1695,7 +1695,7 @@ org $01C74B ; <- 00C74B - bank01.asm:10368 - (STZ $AE, X)
 NOP #2 ; this STZ is what makes the crystal never spawn if it fails to spawn on the first try
 ;================================================================================
 org $0DE9C8 ; <- 6E9C8 - equipment.asm:1623 - (LDA $7EF3C5 : CMP.b #$03 : BCC .beforeAgahnim)
-JSL.l DrawPendantCrystalDiagram : RTS
+JSL.l DrawGoalHUD : RTS
 ;NOP #11
 ;================================================================================
 org $0DEDCC ; <- 6EDCC - equipment.asm:2043 - (LDA $040C : AND.w #$00FF : CMP.w #$00FF : BNE .inSpecificDungeon)

@@ -57,52 +57,6 @@ SEP #$30
 	+
 	
 ;================================================================================
-; Draw Goal Item Indicator
-!GOAL_ELDER = "$7EF41A"
-!GOAL_COUNTER = "$7EF418"
-!GOAL_DRAW_ADDRESS = "$7EC72A"
-;================================================================================
-
-	print "Triforce Counter: ", pc
-	REP #$20
-	LDA.l !GOAL_ELDER : AND.w #$FF : BNE +
-	LDA.l GoalItemFlags : AND.w #$0001 : BEQ +  ; check flag for hide until get triforce piece
-	LDA.l !GOAL_COUNTER : BNE + : BRL .done : + ; if zero, skip hud writing
-	LDA.l GoalItemRequirement : BNE + : BRL .done : + ; Star Meter
-	
-	lda.l DRFlags : and #$0008 : beq +	;If debug counter is active, alternate between it, and triforce pieces every 128 frames.
-	lda $1a : and #$0080 : beq + : BRL .done : +
-	
-	LDA.l !GOAL_COUNTER
-	JSR HudHexToDec4Digit
-	
-	LDA.l GoalItemIcon : STA !GOAL_DRAW_ADDRESS ; draw star icon
-	
-	LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+2 ; draw 100's digit
-	LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+4 ; draw 10's digit
-	LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+6 ; draw 1's digit
-	
-	LDA.l !GOAL_ELDER : AND.w #$FF : BNE .show_total
-	LDA.l GoalItemFlags : AND.w #$0002 : BNE .skip
-	.show_total
-	LDA.l GoalItemRequirement : CMP #$FFFF : BEQ .skip
-		LDA.l GoalItemRequirement
-		JSR HudHexToDec4Digit
-		LDA.w #$2830 : STA !GOAL_DRAW_ADDRESS+8 ; draw slash
-		LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+10 ; draw 100's digit
-		LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+12 ; draw 10's digit
-		LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+14 ; draw 1's digit
-		BRA .done
-	.skip
-		LDA.w #$207F ; transparent tile
-		STA !GOAL_DRAW_ADDRESS+8
-		STA !GOAL_DRAW_ADDRESS+10
-		STA !GOAL_DRAW_ADDRESS+12
-		STA !GOAL_DRAW_ADDRESS+14
-	.done
-	SEP #$20
-	
-;================================================================================
 ; Draw Dungeon Compass Counts
 ;================================================================================
 	REP #$20

@@ -457,66 +457,82 @@ DrawHUDDungeonItems:
 RTL
 ;--------------------------------------------------------------------------------
 ;================================================================================
-DrawPendantCrystalDiagram:
+; draw goals (pendants, crystals, possibly goal items)
+;================================================================================
+!GOAL_ELDER = "$7EF41A"
+!GOAL_COUNTER = "$7EF418"
+;--------------------------------------------------------------------------------
+; green pendant: $04
+; blue pendant: $02
+; red pendant: $01
+macro check_draw_pendant(flag, tile, location)
+	LDA $7EF374 : AND.w <flag> : BEQ +
+		LDA.w <tile>   : STA <location>
+		LDA.w <tile>+1 : STA <location>+$2
+		LDA.w <tile>+2 : STA <location>+$40
+		LDA.w <tile>+3 : STA <location>+$42
+	+
+endmacro
+
+; Crystal 1: $02
+; Crystal 2: $10
+; Crystal 3: $40
+; Crystal 4: $20
+; Crystal 5: $04
+; Crystal 6: $01
+; Crystal 7: $08
+macro check_draw_crystal(flag, tile, location)
+	LDA $7EF37A : AND.w <flag> : BEQ + ; crystal 1
+		LDA.w <tile>   : STA <location>
+		LDA.w <tile>+1 : STA <location>+$2
+	+
+endmacro
+;--------------------------------------------------------------------------------
+DrawGoalHUD:
 	PHP : PHB : PHK : PLB
-		REP #$30 ; Set 16-bit accumulator & index registers
-		LDX.w #$0000 ; Paint entire box black & draw empty pendants and crystals
-		-
-	        LDA.l .row0, X : STA $12EA, X
-	        LDA.l .row1, X : STA $132A, X
-	        LDA.l .row2, X : STA $136A, X
-	        LDA.l .row3, X : STA $13AA, X
-	        LDA.l .row4, X : STA $13EA, X
-	        LDA.l .row5, X : STA $142A, X
-	        LDA.l .row6, X : STA $146A, X
-	        LDA.l .row7, X : STA $14AA, X
-	        LDA.l .row8, X : STA $14EA, X
-		INX #2 : CPX.w #$0014 : BCC -
-		
-		;pendants
-		LDA $7EF374 : AND.w #$0004 : BEQ + ; pendant of courage (green)
-			LDA.w #$3D2B : STA $1332
-			LDA.w #$3D2C : STA $1334
-			LDA.w #$3D2D : STA $1372
-			LDA.w #$3D2E : STA $1374
-		+ LDA $7EF374 : AND.w #$0002 : BEQ + ; pendant of power (blue)
-			LDA.w #$2D2B : STA $13AE
-			LDA.w #$2D2C : STA $13B0
-			LDA.w #$2D2D : STA $13EE
-			LDA.w #$2D2E : STA $13F0
-		+ LDA $7EF374 : AND.w #$0001 : BEQ + ; pendant of wisdom (red)
-			LDA.w #$252B : STA $13B6
-			LDA.w #$252C : STA $13B8
-			LDA.w #$252D : STA $13F6
-			LDA.w #$252E : STA $13F8
-		+
-		
-		;crystals
-		LDA $7EF37A : AND.w #$0002 : BEQ + ; crystal 1
-			LDA.w #$2D44 : STA $14AC
-			LDA.w #$2D45 : STA $14AE
-		+ LDA $7EF37A : AND.w #$0010 : BEQ + ; crystal 2
-			LDA.w #$2D44 : STA $146E
-			LDA.w #$2D45 : STA $1470
-		+ LDA $7EF37A : AND.w #$0040 : BEQ + ; crystal 3
-			LDA.w #$2D44 : STA $14B0
-			LDA.w #$2D45 : STA $14B2
-		+ LDA $7EF37A : AND.w #$0020 : BEQ + ; crystal 4
-			LDA.w #$2D44 : STA $1472
-			LDA.w #$2D45 : STA $1474
-		+ LDA $7EF37A : AND.w #$0004 : BEQ + ; crystal 5
-			LDA.w #$2544 : STA $14B4
-			LDA.w #$2545 : STA $14B6
-		+ LDA $7EF37A : AND.w #$0001 : BEQ + ; crystal 6
-			LDA.w #$2544 : STA $1476
-			LDA.w #$2545 : STA $1478
-		+ LDA $7EF37A : AND.w #$0008 : BEQ + ; crystal 7
-			LDA.w #$2D44 : STA $14B8
-			LDA.w #$2D45 : STA $14BA
-		+ 
+	REP #$30 ; Set 16-bit accumulator & index registers
+
+	; check for triforce hunt, etc.
+	LDA.l GoalItemRequirement : BEQ DrawPendantCrystalDiagram                ; show standard display if no goal items
+	LDA.l !GOAL_ELDER : AND.w #$00FF : BEQ + : JMP DrawGoalItemDiagram : +   ; show goal item display if the elder was visited
+	LDA.l GoalItemFlags : AND.w #$0001 : BNE + : JMP DrawGoalItemDiagram : + ; show goal item display if we haven't been told to hide it
+	LDA.l !GOAL_COUNTER : BEQ + : JMP DrawGoalItemDiagram : +                ; show goal item display if we have, but have found a goal item
+	; otherwise, fall through to the standard display
+
+;================================================================================
+; standard pendant & crystal display
+;================================================================================
+DrawPendantCrystalDiagram:
+	LDX.w #$0000 ; Paint entire box black & draw empty pendants and crystals
+	-
+		LDA.l .row0, X : STA $12EA, X
+		LDA.l .row1, X : STA $132A, X
+		LDA.l .row2, X : STA $136A, X
+		LDA.l .row3, X : STA $13AA, X
+		LDA.l .row4, X : STA $13EA, X
+		LDA.l .row5, X : STA $142A, X
+		LDA.l .row6, X : STA $146A, X
+		LDA.l .row7, X : STA $14AA, X
+		LDA.l .row8, X : STA $14EA, X
+	INX #2 : CPX.w #$0014 : BCC -
+
+	;pendants
+	%check_draw_pendant(#$04, #$3D2B, $1332) ; pendant of courage (green)
+	%check_draw_pendant(#$02, #$2D2B, $13AE) ; pendant of power (blue)
+	%check_draw_pendant(#$01, #$252B, $13B6) ; pendant of wisdom (red)
+
+	;crystals
+	%check_draw_crystal(#$02, #$2D44, $14AC) ; crystal 1
+	%check_draw_crystal(#$10, #$2D44, $146E) ; crystal 2
+	%check_draw_crystal(#$40, #$2D44, $14B0) ; crystal 3
+	%check_draw_crystal(#$20, #$2D44, $1472) ; crystal 4
+	%check_draw_crystal(#$04, #$2544, $14B4) ; crystal 5 (red)
+	%check_draw_crystal(#$01, #$2544, $1476) ; crystal 6 (red)
+	%check_draw_crystal(#$08, #$2D44, $14B8) ; crystal 7
+
 	PLB : PLP
 RTL
-;================================================================================
+;--------------------------------------------------------------------------------
 .row0 dw $28FB, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $68FB
 .row1 dw $28FC, $24F5, $24F5, $24F5, $312B, $312C, $24F5, $24F5, $24F5, $68FC
 .row2 dw $28FC, $24F5, $24F5, $24F5, $313D, $312E, $24F5, $24F5, $24F5, $68FC
@@ -526,46 +542,76 @@ RTL
 .row6 dw $28FC, $24F5, $3146, $3147, $3146, $3147, $3146, $3147, $24F5, $68FC
 .row7 dw $28FC, $3146, $3147, $3146, $3147, $3146, $3147, $3146, $3147, $68FC
 .row8 dw $A8FB, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $E8FB
+;--------------------------------------------------------------------------------
 ;================================================================================
-;Crystal 1: $02
-;Crystal 2: $10
-;Crystal 3: $40
-;Crystal 4: $20
-;Crystal 5: $04
-;Crystal 6: $01
-;Crystal 7: $08
-;;blank pendant
-;db $2B, $31, $2C, $31, $3D, $31, $2E, $31
-;
-;;red pendant
-;db $2B, $25, $2C, $25, $2D, $25, $2E, $25
-;
-;;blue pendant
-;db $2B, $2D, $2C, $2D, $2D, $2D, $2E, $2D
-;
-;;green pendant
-;db $2B, $3D, $2C, $3D, $2D, $3D, $2E, $3D
+; goal display for goal item modes
 ;================================================================================
-.pendants
-dw $28FB, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $68FB
-dw $28FC, $2521, $2522, $2523, $2524, $253F, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $213B, $213C, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $213D, $213E, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $213B, $213C, $24F5, $24F5, $213B, $213C, $24F5, $68FC
-dw $28FC, $24F5, $213D, $213E, $24F5, $24F5, $213D, $213E, $24F5, $68FC
-dw $A8FB, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $E8FB
-.crystals
-dw $28FB, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $68FB
-dw $28FC, $252F, $2534, $2535, $2536, $2537, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $3146, $3147, $3146, $3147, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $3146, $3147, $3146, $3147, $3146, $3147, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
-dw $28FC, $24F5, $24F5, $3146, $3147, $3146, $3147, $24F5, $24F5, $68FC
-dw $A8FB, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $E8FB
+macro draw3digit(location)
+	LDX #$2827
+	CMP.w #100 : !BLT + : LDX #$2817 : !SUB.w #100
+	CMP.w #100 : !BLT + : INX        : !SUB.w #100
+	CMP.w #100 : !BLT + : INX        : !SUB.w #100
+	CMP.w #100 : !BLT + : INX        : !SUB.w #100 ; caps at 499 (seriously???)
+	+ : STX <location> ; hundredths digit
+
+	ASL : TAX : LDA HudDigitTable, X : PHA ; needed twice, save so we can get it back
+	AND #$000F : BNE + : LDA #$0011 : +
+	!ADD.w #$2816 : STA <location>+2 ; tenths digit
+
+	PLA : XBA ; get back what we fetched earlier, get the other byte there
+	AND #$000F : BNE + : LDA #$0011 : +
+	!ADD.w #$2816 : STA <location>+4 ; ones digit
+endmacro
+;--------------------------------------------------------------------------------
+DrawGoalItemDiagram:
+	LDX.w #$0000 ; Paint entire box black & draw empty pendants and crystals
+	-
+		LDA.l .row0, X : STA $12EA, X
+		LDA.l .row1, X : STA $132A, X
+		LDA.l .row2, X : STA $136A, X
+		LDA.l .row3, X : STA $13AA, X
+		LDA.l .row4, X : STA $13EA, X
+		LDA.l .row5, X : STA $142A, X
+		LDA.l .row6, X : STA $146A, X
+		LDA.l .row7, X : STA $14AA, X
+		LDA.l .row8, X : STA $14EA, X
+	INX #2 : CPX.w #$0014 : BCC -
+
+	;pendants
+	%check_draw_pendant(#$04, #$3D2B, $132C) ; pendant of courage (green)
+	%check_draw_pendant(#$02, #$2D2B, $1332) ; pendant of power (blue)
+	%check_draw_pendant(#$01, #$252B, $1338) ; pendant of wisdom (red)
+
+	;crystals
+	%check_draw_crystal(#$02, #$2D44, $13EC) ; crystal 1
+	%check_draw_crystal(#$10, #$2D44, $13AE) ; crystal 2
+	%check_draw_crystal(#$40, #$2D44, $13F0) ; crystal 3
+	%check_draw_crystal(#$20, #$2D44, $13B2) ; crystal 4
+	%check_draw_crystal(#$04, #$2544, $13F4) ; crystal 5 (red)
+	%check_draw_crystal(#$01, #$2544, $13B6) ; crystal 6 (red)
+	%check_draw_crystal(#$08, #$2D44, $13F8) ; crystal 7
+
+	LDA !GOAL_COUNTER : %draw3digit($1470) ; draw total goal items collected
+
+	LDA.l !GOAL_ELDER : AND.w #$FF : BNE + 
+	LDA.l GoalItemFlags : AND.w #$0002 : BNE ++
+	+ : LDA.l GoalItemRequirement : CMP #$FFFF : BEQ ++
+	%draw3digit($14B6) ; draw goal items required
+	++
+
+	PLB : PLP
+RTL
+;--------------------------------------------------------------------------------
+.row0 dw $28FB, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $28F9, $68FB
+.row1 dw $28FC, $312B, $312C, $24F5, $312B, $312C, $24F5, $312B, $312C, $68FC
+.row2 dw $28FC, $313D, $312E, $24F5, $313D, $312E, $24F5, $313D, $312E, $68FC
+.row3 dw $28FC, $24F5, $3146, $3147, $3146, $3147, $3146, $3147, $24F5, $68FC
+.row4 dw $28FC, $3146, $3147, $3146, $3147, $3146, $3147, $3146, $3147, $68FC
+.row5 dw $28FC, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $24F5, $68FC
+.row6 dw $28FC, $2936, $6936, $292A, $292A, $292A, $2828, $24F5, $24F5, $68FC
+.row7 dw $28FC, $2937, $6937, $24F5, $24F5, $282D, $292A, $292A, $292A, $68FC
+.row8 dw $A8FB, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $A8F9, $E8FB
+;--------------------------------------------------------------------------------
 ;================================================================================
 ; DATA - Dungeon Worlds
 ;.dungeon_worlds

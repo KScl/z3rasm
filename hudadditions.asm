@@ -8,32 +8,6 @@ DrHudOverride:
 
 HudAdditions:
 {
-	print "Debug Counter: ", pc
-    lda.l DRFlags : and #$0008 : bne + : BRL ++ : +
-		LDA.l !GOAL_ELDER : AND.w #$FF : BNE +
-		LDA.l GoalItemFlags : AND.w #$0001 : BEQ +  ; check flag for hide until get triforce piece
-		LDA.l !GOAL_COUNTER : BNE + : BRL .debug_counter : + ; if zero, skip hud writing
-		LDA.l GoalItemRequirement : BNE + : BRL .debug_counter : + ; Star Meter
-		lda $1a : and #$0080 : beq ++	; Skip drawing debug counter entirely for 2 seconds, we need to render Triforce counter instead.
-		
-	.debug_counter
-		LDA.w #$28A4 : STA !GOAL_DRAW_ADDRESS
-		lda $7EF423
-        JSL HudHexToDec4DigitLong
-		LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+2 ; draw 100's digit
-		LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+4 ; draw 10's digit
-		LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+6 ; draw 1's digit
-		LDA.w #$2830 : STA !GOAL_DRAW_ADDRESS+8 ; draw slash
-		LDA.l DRFlags : AND #$0100 : BNE +
-        	lda $7EF33E
-			JSL HudHexToDec4DigitLong
-			LDX.b $05 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+10 ; draw 100's digit
-			LDX.b $06 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+12 ; draw 10's digit
-			LDX.b $07 : TXA : ORA.w #$2400 : STA !GOAL_DRAW_ADDRESS+14 ; draw 1's digit
-			BRA ++
-		+ LDA.w #$2405 : STA !GOAL_DRAW_ADDRESS+10 : STA !GOAL_DRAW_ADDRESS+12 : STA !GOAL_DRAW_ADDRESS+14
-    ++
-
 	LDX $1B : BNE + : RTS : + ; Skip if outdoors
 	ldx $040c : cpx #$ff : bne + : rts : + ; Skip if not in dungeon
 	lda.l DRMode : bne + : rts : + ; Skip if not door rando

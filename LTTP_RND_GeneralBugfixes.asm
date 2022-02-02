@@ -262,7 +262,7 @@ warnpc $31A000
 
 org $31A000
 GFX_HUD_Items:
-incbin c2807_v4.gfx
+incbin gfx/inv_lower128.lc_lz1
 warnpc $31A800
 
 org $31A800
@@ -273,7 +273,7 @@ warnpc $31B000
 
 org $31B000
 GFX_HUD_Main:
-incbin c2e3e.gfx
+incbin gfx/inv_upper128.lc_lz1
 warnpc $31B800
 
 org $31C000
