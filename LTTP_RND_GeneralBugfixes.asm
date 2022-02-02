@@ -240,25 +240,20 @@ incsrc spc.asm
 ; uncomment for inverted adjustments
 ;incsrc sandbox.asm
 
-org $318000 ; bank #$31
-GFX_Mire_Bombos:
-incbin 99ff1_bombos.gfx
-warnpc $318800
-
-org $318800
-GFX_Mire_Quake:
-incbin 99ff1_quake.gfx
-warnpc $319000
-
-org $319000
-GFX_TRock_Bombos:
-incbin a6fc4_bombos.gfx
-warnpc $319800
-
-org $319800
-GFX_TRock_Ether:
-incbin a6fc4_ether.gfx
-warnpc $31A000
+;==============================================================================
+; new medallion tile graphics -- don't move or remove these
+; used by the frontend
+;------------------------------------------------------------------------------
+org $318000 : incbin gfx/sheet_50_bombos.lc_lz1 : warnpc $318800
+org $318800 : incbin gfx/sheet_50_quake.lc_lz1  : warnpc $319000
+org $319000 : incbin gfx/sheet_96_bombos.lc_lz1 : warnpc $319800
+org $319800 : incbin gfx/sheet_96_ether.lc_lz1  : warnpc $31A000
+;==============================================================================
+; inverted castle hole tile graphics -- don't move or remove these
+; used by the frontend
+;------------------------------------------------------------------------------
+org $31E000 : incbin gfx/sheet_73_inverted.lc_lz1 : warnpc $31E501
+;==============================================================================
 
 org $31A000
 GFX_HUD_Items:
@@ -288,13 +283,8 @@ warnpc $31D001
 
 org $31D000
 FileSelectNewGraphics:
-incbin fileselect.chr.gfx
+incbin gfx/fileselect.raw
 warnpc $31E001
-
-org $31E000
-InvertedCastleHole: ;address used by front end. DO NOT MOVE!
-incbin sheet73.gfx
-warnpc $31E501
 
 org $338000
 GFX_HUD_Palette:
@@ -302,12 +292,13 @@ incbin hudpalette.pal
 warnpc $338041
 
 org $339000
-incbin sheet178.gfx
+GFX_HyruleCastleBarrier:
+incbin gfx/sheet_178_barrier.lc_lz1
 warnpc $339600
 
 org $33A000
 LowercaseFont:
-incbin lowerfont.gfx
+incbin gfx/lowerfont.raw
 warnpc $33B000
 
 org $328000
@@ -399,20 +390,6 @@ warnpc $B08000
 ;db $2B, $31, $2C, $31, $3D, $31, $2E, $31
 ;db $2B, $3D, $2C, $3D, $2D, $3D, $2E, $3D
 ;================================================================================
-;org $00CFF2 ; 0x4FF2 - Mire H
-;db GFX_Mire_Bombos>>16
-;org $00D0D1 ; 0x50D1 - Mire M
-;db GFX_Mire_Bombos>>8
-;org $00D1B0 ; 0x51B0 - Mire L
-;db GFX_Mire_Bombos
-
-;org $00D020 ; 0x5020 - Trock H
-;db GFX_TRock_Bombos>>16
-;org $00D0FF ; 0x50FF - Trock M
-;db GFX_TRock_Bombos>>8
-;org $00D1DE ; 0x51DE - Trock L
-;db GFX_TRock_Bombos
-
 org $00D09C ; 0x509C - HUD Items H
 db GFX_HUD_Items>>16
 org $00D17B ; 0x517B - HUD Items M

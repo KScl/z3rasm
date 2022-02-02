@@ -2575,9 +2575,9 @@ db #$25, #$D4 ;change [LW2] map 01C pointers
 ;--------------------------------------------------------------------------------
 ; Expanded trinexx sheet gfx.
 ;--------------------------------------------------------------------------------
-org $00CFC0+178 : db #$33
-org $00D09F+178 : db #$90
-org $00D17E+178 : db #$00
+org $00CFC0+178 : db GFX_HyruleCastleBarrier>>16
+org $00D09F+178 : db GFX_HyruleCastleBarrier>>8
+org $00D17E+178 : db GFX_HyruleCastleBarrier
 ; Use above sheet in Hyrule castle courtyard after rain state.
 org $00DB9E ; Hyrule Castle GFX Sprite Sheet 4 on [LW1]
 db #$3F
