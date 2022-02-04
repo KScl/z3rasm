@@ -241,6 +241,18 @@ incsrc spc.asm
 ;incsrc sandbox.asm
 
 ;==============================================================================
+; SPRITES
+;==============================================================================
+org $378000
+incsrc spriteextend.asm
+;==============================================================================
+; new sprite tables
+;------------------------------------------------------------------------------
+%spritesheet_hipal($80) : %spritesheet($80, gfx/items_z3r_orig.lc_lz1)
+%spritesheet_hipal($81) : %spritesheet($81, gfx/items_new_1.lc_lz1)
+;%spritesheet_hipal($82) : %spritesheet($82, gfx/items_z3r_event.lc_lz1)
+%spritesheet_hipal($9F) : %spritesheet($9F, gfx/shop_base.lc_lz1)
+;==============================================================================
 ; new medallion tile graphics -- don't move or remove these
 ; used by the frontend
 ;------------------------------------------------------------------------------
@@ -254,22 +266,18 @@ org $319800 : incbin gfx/sheet_96_ether.lc_lz1  : warnpc $31A000
 ;------------------------------------------------------------------------------
 org $31E000 : incbin gfx/sheet_73_inverted.lc_lz1 : warnpc $31E501
 ;==============================================================================
-
-org $31A000
-GFX_HUD_Items:
-incbin gfx/inv_lower128.lc_lz1
-warnpc $31A800
-
-org $31A800
-GFX_New_Items:
-incbin newitems.gfx
-;incbin eventitems.gfx ; *EVENT*
-warnpc $31B000
-
-org $31B000
-GFX_HUD_Main:
-incbin gfx/inv_upper128.lc_lz1
-warnpc $31B800
+; inventory stuff -- replaces vanilla inventory graphics entirely
+;------------------------------------------------------------------------------
+org $31A000 : %spritesheet($69, gfx/inv_lower128.lc_lz1) : warnpc $31A800
+org $31A800 : %spritesheet($6A, gfx/inv_upper128.lc_lz1) : warnpc $31B000
+;==============================================================================
+; graphics hacks that should probably be redone at some point
+; replaces Trinexx sprite table
+;------------------------------------------------------------------------------
+org $31B000 : %spritesheet($3F, gfx/sheet_178_barrier.lc_lz1) : warnpc $31B800
+;==============================================================================
+; other, unsorted graphics things
+;------------------------------------------------------------------------------
 
 org $31C000
 IcePalaceFloorGfx:
@@ -290,11 +298,6 @@ org $338000
 GFX_HUD_Palette:
 incbin hudpalette.pal
 warnpc $338041
-
-org $339000
-GFX_HyruleCastleBarrier:
-incbin gfx/sheet_178_barrier.lc_lz1
-warnpc $339600
 
 org $33A000
 LowercaseFont:
@@ -340,8 +343,8 @@ warnpc $B08000
 ;$32 Text Bank
 ;$33 Graphics Bank
 ;$36 Enemizer
-;$37 Don't Use ZSNES Graphics
-;$38 Don't Use ZSNES Graphics (continued)
+;$37 (formerly zsnes) Extend Sprite Tables, Sprite Graphics Bank
+;$38 (formerly zsnes) Unused
 ;$3A reserved for downstream use
 ;$3B reserved for downstream use
 ;$3F reserved for internal debugging
@@ -389,28 +392,6 @@ warnpc $B08000
 ;;green pendant
 ;db $2B, $31, $2C, $31, $3D, $31, $2E, $31
 ;db $2B, $3D, $2C, $3D, $2D, $3D, $2E, $3D
-;================================================================================
-org $00D09C ; 0x509C - HUD Items H
-db GFX_HUD_Items>>16
-org $00D17B ; 0x517B - HUD Items M
-db GFX_HUD_Items>>8
-org $00D25A ; 0x525A - HUD Items L
-db GFX_HUD_Items
-
-; this used to be a pointer to a dummy file
-org $00D065 ; 005065 - New Items H
-db GFX_New_Items>>16
-org $00D144 ; 005114 - New Items M
-db GFX_New_Items>>8
-org $00D223 ; 005223 - New Items L
-db GFX_New_Items
-
-org $00D09D ; 0x509D - HUD Main H
-db GFX_HUD_Main>>16
-org $00D17C ; 0x517C - HUD Main M
-db GFX_HUD_Main>>8
-org $00D25B ; 0x525B - HUD Main L
-db GFX_HUD_Main
 ;================================================================================
 org $008781
 UseImplicitRegIndexedLocalJumpTable:

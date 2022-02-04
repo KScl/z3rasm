@@ -2573,12 +2573,9 @@ db #$12, #$19, #$16 ;add sahasrala in castle Y, X, Sprite ID
 org $09CA57
 db #$25, #$D4 ;change [LW2] map 01C pointers
 ;--------------------------------------------------------------------------------
-; Expanded trinexx sheet gfx.
+; Use Trinexx sheet in Hyrule castle courtyard (contains barrier graphics)
+; todo Move this to an extend sprite table
 ;--------------------------------------------------------------------------------
-org $00CFC0+178 : db GFX_HyruleCastleBarrier>>16
-org $00D09F+178 : db GFX_HyruleCastleBarrier>>8
-org $00D17E+178 : db GFX_HyruleCastleBarrier
-; Use above sheet in Hyrule castle courtyard after rain state.
 org $00DB9E ; Hyrule Castle GFX Sprite Sheet 4 on [LW1]
 db #$3F
 org $00DC0A ; Hyrule Castle GFX Sprite Sheet 4 on [LW2]
@@ -2698,3 +2695,12 @@ JSL Palette_ArmorAndGlovesRandSprite_part_two
 RTL
 ;--------------------------------------------------------------------------------
 
+;================================================================================
+; Shopkeeper sprite tile change
+;--------------------------------------------------------------------------------
+; Changes the last sprite table of all shops to point to an extended sprite table
+; containing more useful randomizer graphics, as we don't use the original
+; graphics in new shop code any longer
+org $00DCAE ; Shopkeeper sprite table 4
+db $9F
+;--------------------------------------------------------------------------------

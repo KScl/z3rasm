@@ -826,26 +826,16 @@ Shopkeeper_DrawNextItem:
 	PHX : LDA #0 : XBA : TXA : LSR #2 : TAX : LDA.l !SHOP_INVENTORY_DISGUISE, X : PLX : CMP #$0 : BNE ++ 
 		LDA.l !SHOP_INVENTORY, X ; get item palette
 	++
-	CMP.b #$2E : BNE + : BRA .potion
-	+ CMP.b #$2F : BNE + : BRA .potion
-	+ CMP.b #$30 : BEQ .potion
-	CMP.b #$B1 : BEQ .fae
-	CMP.b #$B3 : BEQ .jar
-	CMP.b #$B4 : BEQ .apple
-	.normal
-		LDA.w .tile_indices, Y : BRA + ; get item gfx index
-	.potion
-		LDA.b #$C0 ; potion is #$C0 because it's already there in VRAM
-		BRA +
-	.fae
-		LDA.b #$EA ; already there in VRAM
-		BRA +
-	.jar
-		LDA.b #$62 ; already there in VRAM
-		BRA +
-	.apple
-		LDA.b #$E5 ; already there in VRAM
-	+
+
+	; Replace some items with graphics already loaded in VRAM
+	CMP.b #$2E : BNE + : LDA.b #$C0 : BRA .got_gfx : + ; Red Potion
+	CMP.b #$2F : BNE + : LDA.b #$E0 : BRA .got_gfx : + ; Green Potion
+	CMP.b #$30 : BNE + : LDA.b #$E2 : BRA .got_gfx : + ; Blue Potion
+	CMP.b #$B1 : BNE + : LDA.b #$EA : BRA .got_gfx : + ; Fairy
+	CMP.b #$B4 : BNE + : LDA.b #$E5 : BRA .got_gfx : + ; Apple (cleaner graphics in VRAM with a different palette)
+	; Use graphics we loaded for any others
+	LDA.w .tile_indices, Y ; get item gfx index
+	.got_gfx
 	XBA
 
 	LDA !SHOP_TYPE : AND.b #$10 : BEQ +
@@ -858,7 +848,13 @@ Shopkeeper_DrawNextItem:
 	PHX : LDA #0 : XBA : TXA : LSR #2 : TAX : LDA.l !SHOP_INVENTORY_DISGUISE, X : PLX : CMP #$0 : BNE ++ 
 		LDA.l !SHOP_INVENTORY, X ; get item palette
 	++
-	JSL.l GetSpritePalette : STA.l !SPRITE_OAM+5
+
+	; Same as above but with palettes
+	CMP.b #$B4 : BNE + : LDA.b #$02 : BRA .got_pal : + ; Apple (cleaner graphics in VRAM with a different palette)
+	JSL.l GetSpritePalette
+	.got_pal
+	STA.l !SPRITE_OAM+5
+
 
 	LDA.l !SPRITE_OAM+4 : CMP #$EA : BEQ .swap_sheet : CMP #$E4 : BEQ .swap_sheet : CMP #$62 : BEQ .swap_sheet : CMP #$E5 : BEQ .swap_sheet
 	AND #$FE : STA.l !SPRITE_OAM+4 ; if normal indices, strip last bit so it's even on the sprite sheet

@@ -169,7 +169,7 @@ RTL
 	db $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F, $0F ; Free Small Key
 
 	db $2C ; Bee Trap
-	db $2B, $2C, $32, $31 ; Fae, Bee, Jar, Apple
+	db $2B, $2C, $3B, $42 ; Fae, Bee, Magic Refill, Apple
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
@@ -306,7 +306,7 @@ RTL
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08 ; Free Big Key
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08 ; Free Small Key
 	db $04 ; Bee Trap
-	db $08, $02, $08, $02 ; Fae, Bee, Jar, Apple
+	db $08, $02, $08, $08 ; Fae, Bee, Jar, Apple
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08 ; Unused
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08 ; Unused
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08 ; Unused
@@ -325,6 +325,7 @@ IsNarrowSprite:
 	PHB : PHK : PLB
 	;JSR AttemptItemSubstitution
 	;--------
+	CMP.b #$B3 : BNE + : SEC : BRL .done : + ; Magic Refill -- todo do this less hackily
 	CMP.b #$16 : BEQ .bottle ; Bottle
 	CMP.b #$2B : BEQ .bottle ; Red Potion w/bottle
 	CMP.b #$2C : BEQ .bottle ; Green Potion w/bottle
