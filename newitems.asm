@@ -49,165 +49,151 @@
 ; 0xF1 - freestanding heart 2 / boss heart / npc
 ; 0xF3 - tablet/pedestal
 ;================================================================================
-; Sprite Graphic Table : bbbbbbbb yyyyxxxx
+; Sprite Graphic Table : bbbbbbbb --yyxxxx
 ; b: Sprite graphics bank to use (00-6B, or >=80 for extend sprites)
 ; y: y coordinate of which 8x8 tile to use
-;     - you probably want 4 or 6
+;     - you probably want 0 or 2
 ; x: x coordinate of which 8x8 tile to use
 ;     - you probably want an even number unless you're doing narrow sprites
-; e.g.: $68 cooresponds to $09C0 in the original table
+; e.g.: $28 cooresponds to $03C0 in the original table
 ;--------------------------------------------------------------------------------
 SpriteGraphicTable:
-dw $5B68 ; filled bottle
-dw $5B02 ; 3 bombs
-dw $5B04 ; 10 arrows
-dw $5B06 ; heart container
-dw $5B08 ; mail
-dw $5B20 ; bow
-dw $5B21 ; fighter's sword
-dw $5B22 ; cane
-dw $5B23 ; hookshot
-dw $5B24 ; fire/ice rod
-dw $5B25 ; hammer
-dw $5B26 ; powder
-dw $5C62 ; flute
-dw $5B2A ; glove
-dw $5B2C ; book
-dw $5B2E ; small key
-; $10
-dw $5B2F ; boomerang
-dw $5B40 ; flippers
-dw $5B42 ; mirror
-dw $5B44 ; single bomb
-dw $5B46 ; lamp
-dw $5B48 ; cape
-dw $5B4A ; compass
-dw $5B4C ; moon pearl
-dw $5B4E ; master sword+
-dw $5B4F ; shovel
-dw $5B60 ; ether
-dw $5B62 ; bombos
-dw $5B64 ; quake
-dw $5B66 ; empty bottle
-dw $5B6A ; mushroom
-dw $5B00 ; free potion
-; $20
-dw $5B0A ; red shield
-dw $5B6C ; map
-dw $5B6E ; big key
-dw $5D44 ; pendant
-dw $5C40 ; rupee animation 1/3
-dw $5C41 ; rupee animation 2/3
-dw $5C42 ; rupee animation 3/3
-dw $5C43 ; net
-dw $5C45 ; crystal
-dw $5C49 ; bow & arrow
-dw $5C47 ; bow & silver arrow
-dw $5C4B ; fairy bottle
-dw $5C4D ; bee bottle
-dw $5C4F ; small shield
-dw $5C64 ; mirror shield
-dw $5C60 ; piece of heart
-; $30
-dw $5C28 ; 10 bombs
-dw $5C66 ; small heart
-dw $5C67 ; small magic
-dw $5C68 ; single arrow
-dw $5C69 ; 100 rupees
-dw $5C6B ; 50 rupees
-dw $5C6D ; 300 rupees
-dw $5D40 ; green 20 rupees
-dw $5D42 ; pegasus boots
-dw $8040 ; 50 bomb capacity ------ new graphics added to randomizer
-dw $8042 ; 70 arrow capacity
-dw $8044 ; half magic
-dw $8046 ; quarter magic
-dw $8048 ; +5 bomb capacity
-dw $804A ; +10 bomb capacity
-dw $804C ; +5 arrow capacity
-; $40
-dw $804E ; +10 arrow capacity
-dw $8060 ; silver arrows
-dw $8140 ; apple
-dw $8062 ; fighter's sword pickup
-dw $8064 ; master sword pickup
-dw $8066 ; tempered sword pickup
-dw $8068 ; golden sword pickup
-dw $806A ; nothing
-dw $6068 ; clock
-dw $806C ; triforce piece
-dw $806E ; power star
-dw $9F40 ; free red potion
-dw $9F60 ; free green potion
-dw $9F62 ; free blue potion
-dw $8160 ; unused
-dw $8160 ; unused
-; $50
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-; $60
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-; $70
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-dw $8160 ; unused
-;--------------------------------------------------------------------------------
-GetAnimatedSpriteGfxFile:
-	PHX
-	ASL : TAX : LDA.l SpriteGraphicTable+1, X : TAY
-	PLX
-	JML GetAnimatedSpriteGfxFile_return
-;--------------------------------------------------------------------------------
-GetAnimatedSpriteBufferPointer:
-	; 16-bit A, 8-bit X
-	; $0e is written to and not read from after this so we use it freely
-	LDA.l SpriteGraphicTable, X : AND #$00FF
-	STA.b $0e : ASL : ADC.b $0e : ASL #3 ; multiply by $18
-	ADC.b $00
-RTL
-;--------------------------------------------------------------------------------
+	dw $5B28 ; filled bottle
+	dw $5A02 ; 3 bombs
+	dw $5A04 ; 10 arrows
+	dw $5A06 ; heart container
+	dw $5A08 ; mail
+	dw $5A20 ; bow
+	dw $5A21 ; fighter's sword
+	dw $5A22 ; cane
+	dw $5A23 ; hookshot
+	dw $5A24 ; fire/ice rod
+	dw $5A25 ; hammer
+	dw $5A26 ; powder
+	dw $5C22 ; flute
+	dw $5A2A ; glove
+	dw $5A2C ; book
+	dw $5A2E ; small key
+	; $10
+	dw $5A2F ; boomerang
+	dw $5B00 ; flippers
+	dw $5B02 ; mirror
+	dw $5B04 ; single bomb
+	dw $5B06 ; lamp
+	dw $5B08 ; cape
+	dw $5B0A ; compass
+	dw $5B0C ; moon pearl
+	dw $5B0E ; master sword+
+	dw $5B0F ; shovel
+	dw $5B20 ; ether
+	dw $5B22 ; bombos
+	dw $5B24 ; quake
+	dw $5B26 ; empty bottle
+	dw $5B2A ; mushroom
+	dw $5A00 ; free potion
+	; $20
+	dw $5A0A ; red shield
+	dw $5B2C ; map
+	dw $5B2E ; big key
+	dw $5D04 ; pendant
+	dw $5C00 ; rupee animation 1/3
+	dw $5C01 ; rupee animation 2/3
+	dw $5C02 ; rupee animation 3/3
+	dw $5C03 ; net
+	dw $5C05 ; crystal
+	dw $5C09 ; bow & arrow
+	dw $5C07 ; bow & silver arrow
+	dw $5C0B ; fairy bottle
+	dw $5C0D ; bee bottle
+	dw $5C0F ; small shield
+	dw $5C24 ; mirror shield
+	dw $5C20 ; piece of heart
+	; $30
+	dw $5A28 ; 10 bombs
+	dw $5C26 ; small heart
+	dw $5C27 ; small magic
+	dw $5C28 ; single arrow
+	dw $5C29 ; 100 rupees
+	dw $5C2B ; 50 rupees
+	dw $5C2D ; 300 rupees
+	dw $5D00 ; green 20 rupees
+	dw $5D02 ; pegasus boots
+	dw $8000 ; 50 bomb capacity ------ new graphics added to randomizer
+	dw $8002 ; 70 arrow capacity
+	dw $8004 ; half magic
+	dw $8006 ; quarter magic
+	dw $8008 ; +5 bomb capacity
+	dw $800A ; +10 bomb capacity
+	dw $800C ; +5 arrow capacity
+	; $40
+	dw $800E ; +10 arrow capacity
+	dw $8020 ; silver arrows
+	dw $8100 ; apple
+	dw $8022 ; fighter's sword pickup
+	dw $8024 ; master sword pickup
+	dw $8026 ; tempered sword pickup
+	dw $8028 ; golden sword pickup
+	dw $802A ; nothing
+	dw $6028 ; clock
+	dw $802C ; triforce piece
+	dw $802E ; power star
+	dw $9F00 ; free red potion
+	dw $9F20 ; free green potion
+	dw $9F22 ; free blue potion
+	dw $8120 ; unused
+	dw $8120 ; unused
+	; $50
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	; $60
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	; $70
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+	dw $8120 ; unused
+;================================================================================
 macro ProgrammableItemLogic(index)
 	LDA.l ProgrammableItemLogicPointer_<index> : BNE ?jump
 	LDA.l ProgrammableItemLogicPointer_<index>+1 : BNE ?jump
@@ -668,6 +654,10 @@ AddReceivedItemExpanded:
 			LDA !MULTIWORLD_ITEM_PLAYER_ID : BEQ +++
 				LDA.b #$0E : STA $02D8 : BRA .done ; Bee in a bottle
 			+++
+		++ : CMP.b #$B4 : BNE ++ ; Apple
+			LDA !MULTIWORLD_ITEM_PLAYER_ID : BEQ +++
+				LDA.b #$B5 : STA $02D8 : BRA .done ; Apple (fake) workaround to show sprite
+			+++
 		++
 		.done
 	PLX : PLA
@@ -714,8 +704,8 @@ AddReceivedItemExpanded:
 	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Free Big Key
 	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Free Small Key
 	db -4 ; Bee Trap
-	db -4, -4, -4, -4 ; Fae, Bee, Magic Refill, Apple
-	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Unused
+	db -4, -4, -4, -4, -4 ; Fae, Bee, Magic Refill, Apple, Apple (fake)
+	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Unused
 	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Unused
 	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Unused
 	db -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4 ; Unused
@@ -756,8 +746,8 @@ AddReceivedItemExpanded:
 	;db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; *EVENT*
 	db  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 ; Free Small Key
 	db  0 ; Bee Trap
-	db  0, 0, 4, 0 ; Fae, Bee, Magic Refill, Apple
-	db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; Unused
+	db  0, 0, 4, 0, 0 ; Fae, Bee, Magic Refill, Apple, Apple (fake)
+	db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; Unused
 	db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; Unused
 	db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; Unused
 	db  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; Unused
@@ -803,8 +793,8 @@ AddReceivedItemExpanded:
 	;db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; *EVENT*
 
 	db $47 ; Bee Trap
-	db $47, $2C, $3B, $47 ; Fae, Bee, Magic Refill, Apple
-	db $47, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
+	db $47, $2C, $3B, $47, $42 ; Fae, Bee, Magic Refill, Apple, Apple (fake)
+	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
 	db $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49, $49 ; Unused
@@ -845,8 +835,8 @@ AddReceivedItemExpanded:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; Free Small Key
 	db $02 ; Bee Trap
 
-	db $02, $02, $00, $02 ; Fae, Bee, Magic Refill, Apple
-	db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; Unused
+	db $02, $02, $00, $02, $02 ; Fae, Bee, Magic Refill, Apple, Apple (fake)
+	db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; Unused
 	db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; Unused
 	db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; Unused
 	db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; Unused

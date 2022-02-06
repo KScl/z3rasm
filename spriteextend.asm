@@ -86,9 +86,9 @@ macro spritesheet_hipal(index)
 	pullpc
 endmacro
 ;------------------------------------------------------------------------------
-ESPTableBank:  fillbyte $37 : fill $80
-ESPTableHigh:  fillbyte $82 : fill $80
-ESPTableLow:   fillbyte $80 : fill $80
+ESPTableBank:  fillbyte $00 : fill $80
+ESPTableHigh:  fillbyte $FF : fill $80
+ESPTableLow:   fillbyte $FF : fill $80
 ESPReserved:   fillbyte $FF : fill $80
 ;------------------------------------------------------------------------------
 HiPalFlag:     fillbyte $00 : fill $100

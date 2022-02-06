@@ -863,15 +863,7 @@ JSL.l ChestPrep
 NOP #3
 db $90 ; !BCC .cantOpen
 ;--------------------------------------------------------------------------------
-org $00D531 ; 5531 - Bank00.asm:3451 (LDY.b #$5D)
-JML.l GetAnimatedSpriteGfxFile
-
-org $00D547 ; 5547 - Bank00.asm:3467 (JSR Decomp_spr_high)
-GetAnimatedSpriteGfxFile_return:
-
-org $00D557 ; 5557 - Bank00.asm:3486 (LDA $00 : ADC $D469, X)
-JSL.l GetAnimatedSpriteBufferPointer
-NOP
+;GetAnimatedSpriteGfx: see itemsprite.asm
 
 org $0799F7 ; 399F7 - Bank07.asm:4107 (JSL AddReceivedItem)
 JSL.l AddReceivedItemExpanded
@@ -1597,13 +1589,6 @@ ShopkeeperFinishInit:
 org $1EEEE3 ; <- F6EE3 - sprite_shopkeeper.asm:7 - (LDA $0E80, X)
 JSL.l Sprite_ShopKeeper : RTS : NOP
 ShopkeeperJumpTable:
-;--------------------------------------------------------------------------------
-
-;================================================================================
-; Tile Target Loader
-;--------------------------------------------------------------------------------
-org $00D55E ; <- 555E - Bank00.asm:3491 (LDX.w #$2D40)
-JSL.l LoadModifiedTileBufferAddress : NOP #2
 ;--------------------------------------------------------------------------------
 
 ;================================================================================

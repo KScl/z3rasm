@@ -106,6 +106,7 @@ db #$20, #$19, #$08, #$31 ; year/month/day
 !Dungeon_ChestData = "$01E96C"
 
 incsrc hooks.asm
+incsrc itemsprite.asm
 incsrc treekid.asm
 ;incsrc spriteswap.asm
 incsrc hashalphabethooks.asm

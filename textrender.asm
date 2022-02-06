@@ -125,16 +125,13 @@ RenderNewChar:
 	JML RenderNewChar_returnOriginal
 
 	+ ; New lowercase font characters
-	AND #$001F
-	ASL : TAX
-    PHB : PEA $3333 : PLB : PLB ; partially taken from SMZ3
-    ASL #5 : TAY
-    LDX #$00000 : -
-    ; Buffer 11px wide. Last three pixels are storred flipped and rotated.
-    ; To return to correct orientation: 90 degrees CCW, flip vertically.
-    LDA.w LowercaseFont, y : STA.l $7EBFC0, x
-    INX : INY : CPX #$002C : BNE - ; 2 planes, 22 rows
-    PLB
-    LDA #$00BD : STA $0e
+	AND #$001F : XBA : LSR #2 : TAY ; get which character we want from our font, shift left six
+	PHB : PEA $3333 : PLB : PLB ; save data bank, set to lowercase font bank
+    LDX #$0000 : -
+	    ; Buffer 11px wide. Last three pixels are storred flipped and rotated.
+	    ; To return to correct orientation: 90 degrees CCW, flip vertically.
+	    LDA.w LowercaseFont, Y : STA.l $7EBFC0, X
+	    INX : INY : CPX #$002C : BNE - ; 2 planes, 22 rows
+    PLB ; restore data bank
     JML RenderNewChar_returnUncompressed
 }

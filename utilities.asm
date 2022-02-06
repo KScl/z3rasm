@@ -576,13 +576,12 @@ LoadModifiedTileBufferAddress:
 	PHA
 	LDA !TILE_UPLOAD_OFFSET_OVERRIDE : BEQ +
 		TAX
-    	LDY.w #$0002
 		LDA.w #$0000 : STA !TILE_UPLOAD_OFFSET_OVERRIDE
 		BRA .done
 	+
     LDX.w #$2D40
-    LDY.w #$0002
 	.done
+	LDY.w #$0002
 	PLA
 RTL
 ;--------------------------------------------------------------------------------
