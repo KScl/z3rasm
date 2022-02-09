@@ -52,9 +52,10 @@ dw $0000, $0000, $0000, $0000, $000a, $000a, $000a, $0014, $000a, $0014, $0000, 
 
 DrHudDungeonItemsAdditions:
 {
-    jsl DrawHUDDungeonItems
     lda.l HUDDungeonItems : and #$ff : bne + : rtl : +
-    lda.l DRMode : cmp #$02 : beq + : rtl : +
+
+    ; if not in DR mode, draw regular dungeon items
+    LDA.l DRMode : CMP #$02 : BEQ + : JML DrawHUDDungeonItems : +
 
     phx : phy : php
     rep #$30
@@ -130,12 +131,17 @@ DrHudDungeonItemsAdditions:
 				tya : !add #$003c : tay
 			+ lda $7ef364 : and.l $0098c0, x : beq + ; must have compass
                 phx ; total chest counts
-                    txa : lsr : tax
-                    sep #$30
-                    lda.l TotalLocations, x : !sub $7EF4BF, x 
-                    REP #$20 : JSL HudHexToDec2DigitLong : REP #$10
-                    lda $06 : jsr ConvertToDisplay2 : sta $1644, y : iny #2
-                    lda $07 : jsr ConvertToDisplay2 : sta $1644, y
+                    TXA : LSR : TAX
+                    SEP #$30
+                    LDA.l TotalLocations, x : !SUB $7EF4BF, x
+                    REP #$30
+
+                    ; two digit hex to dec, convert to hud display
+                    ; can probably do this in a more optimized way but, effort
+                    ASL : TAX : LDA HudDigitTable, X : PHA
+                    AND #$000F : JSR ConvertToDisplay2 : STA $1644, Y
+                    INY #2 : PLA : XBA
+                    AND #$000F : JSR ConvertToDisplay2 : STA $1644, Y
                 plx
                 bra .skipBlanks
 			+ lda.w #$24f5 : sta $1644, y : iny #2 : sta $1644, y
@@ -150,7 +156,7 @@ DrHudDungeonItemsAdditions:
 BkStatus:
     lda $7ef366 : and.l $0098c0, x : bne +++ ; has the bk already
          lda.l BigKeyStatus, x : bne ++
-            lda #$2827 : rts ; 0/O for no BK
+            lda #$283f : rts ; - for no BK
          ++ cmp #$0002 : bne +
             lda #$2420 : rts ; symbol for BnC
     + lda #$24f5 : rts ; black otherwise
