@@ -1016,16 +1016,22 @@ db $00, $01, $02, $03, $04
 org $30821A ; PC 0x18021A
 NoBGM:
 db $00 ; $00 = BGM enabled (default) $01 = BGM disabled
+;--------------------------------------------------------------------------------
 org $30821B ; PC 0x18021B
 FastFanfare:
 db $00 ; $00 = Normal fanfare (default) $01 = Fast fanfare
-org $30821C ; PC 0x18021C
-AllowSettingQuickSwap:
-db $01 ; $01 = QuickSwap user configurable $00 = QuickSwap completely disabled
-AllowSettingMenuSpeed:
-db $01 ; $01 = Menu speed user configurable $00 = Menu speed always default.
 ;--------------------------------------------------------------------------------
-; 0x18021D - 0x18021F (unused)
+org $30821C ; PC 0x18021C
+MSUResumeType:
+db $01 ; Type of tracks to resume #$00 = Everything - #$01 = Overworld (default)
+;--------------------------------------------------------------------------------
+org $30821D ; PC 0x18021D
+MSUResumeTimer:
+dw $0708 ; Number of frames on a different track until we no longer resume (0x708 = 1800 = ~30s)
+;--------------------------------------------------------------------------------
+org $30821F ; PC 0x18021F
+AllowConvenienceSpeedSettings:
+db $FF ; ---- --mq // m: menu speed configurable // q: quickswap configurable
 ;================================================================================
 ; $308220 (0x180220) - $30823F (0x18023F)
 ; Plandomizer Author Name (ASCII) - Leave unused chars as 0
@@ -1554,8 +1560,9 @@ dw #9999 ; Rupee Limit
 ; $7F5100 - $7F51FF - Block Cypher Buffer
 ; $7F5200 - $7F52FF - RNG Pointer Block
 ; $7F5300 - $7F53FF - Multiworld Block
+; $7F5400 - $7F540F - MSU Block
 
-; $7F5400 - $7F56FF - Unused
+; $7F5410 - $7F56FF - Unused
 
 ; $7F5700 - $7F57FF - Dialog Buffer
 ;

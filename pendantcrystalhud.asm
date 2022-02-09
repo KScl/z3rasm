@@ -150,7 +150,7 @@ RTL
 ;================================================================================
 BringMenuDownEnhanced:
 	REP #$20 ; set 16-bit accumulator
-		LDA.l AllowSettingMenuSpeed : AND.w #$00FF
+		LDA.l AllowConvenienceSpeedSettings : AND.w #$0002
 		BNE +
 			LDA.w #$0008 : BRA ++ ; use default speed on tournament seeds
 		+
@@ -170,7 +170,7 @@ BringMenuDownEnhanced:
 RTL
 ;================================================================================
 RaiseHudMenu:
-	LDA.l AllowSettingMenuSpeed : AND.w #$00FF
+	LDA.l AllowConvenienceSpeedSettings : AND.w #$0002
 	BNE +
 		LDA.w #$0008 : BRA ++ ; use default speed on tournament seeds
 	+

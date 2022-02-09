@@ -12,7 +12,7 @@ QuickSwap:
 	LDA.w $0202 : BEQ .done ; Skip everything if we don't have any items
 
 	;TODO add romtype and race rom checks here
-	LDA.l AllowSettingQuickSwap : BEQ .done
+	LDA.l AllowConvenienceSpeedSettings : AND #$0001 : BEQ .done
 
 	PHX
 	XBA ; restore the stashed value

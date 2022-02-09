@@ -27,7 +27,10 @@
 FrameHookAction:
 	JSL $0080B5 ; Module_MainRouting
 	JSL CheckMusicLoadRequest
-	PHA : PHP
+	PHP : REP #$30 : PHA
+	
+		SEP #$20
+
 		;LDA EnableSRAMTrace : AND.l TournamentSeedInverse : BEQ +
 		;	LDA $1A : BNE ++ : JSL.l WriteStatusPreview : ++ ; write every 256 frames
 		;+
@@ -41,9 +44,9 @@ FrameHookAction:
 				LDA !ITEM_FRAMES_LOW : INC : STA !ITEM_FRAMES_LOW : BNE +
 					LDA !ITEM_FRAMES_HIGH : INC : STA !ITEM_FRAMES_HIGH
 				+
-			SEP #$20 ; set 8-bit accumulator ?? check this
+			;SEP #$20 ; set 8-bit accumulator ?? check this
 		++
-	PLP : PLA
+	REP #$30 : PLA : PLP
 RTL
 ;--------------------------------------------------------------------------------
 !NMI_AUX = "$7F5044"
