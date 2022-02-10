@@ -142,7 +142,9 @@
 ;--------------------------------------------------------------------------------
 ; $7EF4D0 - 7EF4DA - Multiworld controls
 ;--------------------------------------------------------------------------------
-; $7EF4DB - 7EF4DF - Free space
+; $7EF4DB - 7EF4DD - Free space
+;--------------------------------------------------------------------------------
+; $7EF4DE - 7EF4DF - Trap disguises
 ;--------------------------------------------------------------------------------
 ; $7EF4E0 - 7EF4EF - Collected Keys, indexed by 040C >> 1
 ;--------------------------------------------------------------------------------
@@ -274,7 +276,7 @@ DecrementSmallKeys:
 	JSL.l UpdateKeys
 
 	; increment total key usage count
-	LDA !LOCK_STATS : BNE +
+	LDA !LOCK_STATS : AND #$00FF : BNE +
 		LDA !KEYS_USED_COUNTER : INC : STA !KEYS_USED_COUNTER
 	+
 RTL

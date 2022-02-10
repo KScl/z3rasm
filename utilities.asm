@@ -2,7 +2,7 @@
 ; Utility Functions
 ;================================================================================
 !PROGRESSIVE_SHIELD = "$7EF416" ; ss-- ----
-!BEE_TRAP_DISGUISE = "$7EF4DA"
+!BEE_TRAP_DISGUISE = "$7EF4DE"
 ;--------------------------------------------------------------------------------
 ; GetSpriteTile
 ; in:	A - Loot ID
