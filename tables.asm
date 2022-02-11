@@ -1560,10 +1560,13 @@ dw #9999 ; Rupee Limit
 ; $7F5100 - $7F51FF - Block Cypher Buffer
 ; $7F5200 - $7F52FF - RNG Pointer Block
 ; $7F5300 - $7F53FF - Multiworld Block
-; $7F5400 - $7F540F - MSU Block
 
-; $7F5410 - $7F56FF - Unused
+; $7F5400 - $7F5403 - Multiworld bonk item tracking
+; $7F5404 - Trap disguises
 
+; $7F5405 - $7F56EF - Unused
+
+; $7F56F0 - $7F56FF - MSU Block
 ; $7F5700 - $7F57FF - Dialog Buffer
 ;
 ;================================================================================
