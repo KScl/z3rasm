@@ -269,7 +269,8 @@ AddInventory:
 	CPY.b #$37 : BNE + : BRL .itemCounts : + ; Pendant
 	CPY.b #$38 : BNE + : BRL .itemCounts : + ; Pendant
 	CPY.b #$39 : BNE + : BRL .itemCounts : + ; Pendant
-	CPY.b #$00 : BNE + : BRL .itemCounts : + ; Uncle Sword & Shield
+	; Fighter Sword and Shield is obtainable as a rando item, do count it
+	; CPY.b #$00 : BNE + : BRL .itemCounts : + ; Uncle Sword & Shield
 	
 	CPY.b #$04 : !BLT .isSword ; Swords - Skip Shop/Fairy Check for Swords
 	CPY.b #$49 : BEQ .isSword
@@ -351,15 +352,18 @@ AddInventory:
 
 	LDA !MULTIWORLD_RECEIVING_ITEM : CMP #$01 : BEQ ++
 		LDA $7EF355 : BNE + ; Check for Boots
-			REP #$20
-			LDA $7EF432 : INC : STA $7EF432 ; Increment Pre Boots Counter
-			SEP #$20
+			LDA $7EF432 : INC : BEQ + ; Don't save if overflowed
+			STA $7EF432 ; Increment Pre Boots Counter
 		+
 
-		LDA $7EF353 : BNE + ; Check for Mirror
-			REP #$20
-			LDA $7EF468 : INC : STA $7EF468 ; Increment Pre Mirror Counter
-			SEP #$20
+		LDA $7EF357 : BNE + ; Check for Moon Pearl
+			LDA $7EF433 : INC : BEQ + ; Don't save if overflowed
+			STA $7EF433 ; Increment Pre Pearl Counter
+		+
+
+		LDA $7EF353 : AND #$02 : BNE + ; Check for Mirror (ignore DR fake mirror)
+			LDA $7EF468 : INC : BEQ + ; Don't save if overflowed
+			STA $7EF468 ; Increment Pre Mirror Counter
 		+
 		REP #$20
 		LDA $7EF423 : INC : STA $7EF423 ; Increment Item Total

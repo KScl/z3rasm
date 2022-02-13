@@ -518,7 +518,7 @@ RTL
 ; #$A0 - Small Keys
 ;--------------------------------------------------------------------------------
 !PROGRESSIVE_SHIELD = "$7EF416" ; ss-- ----
-!RNG_ITEM = "$7EF450"
+!RNG_ITEM = "$7EF470"
 !SCRATCH_AREA = "$7F5020"
 !SINGLE_INDEX_TEMP = "$7F5020"
 !SINGLE_INDEX_OFFSET_TEMP = "$7F5021"
@@ -1129,7 +1129,7 @@ RTL
 	LDA.b #$24 : STA $7EC723
 RTL
 ;--------------------------------------------------------------------------------
-!RNG_ITEM = "$7EF450"
+!RNG_ITEM = "$7EF470"
 !SCRATCH_AREA = "$7F5020"
 !SINGLE_INDEX_TEMP = "$7F5020"
 !SINGLE_INDEX_OFFSET_TEMP = "$7F5021"

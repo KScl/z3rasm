@@ -1,8 +1,6 @@
 ;================================================================================
 ; Stat Tracking
 ;================================================================================
-; $7EF420 - $7EF468 - Stat Tracking
-;--------------------------------------------------------------------------------
 ; $7EF420 - bonk counter
 ;--------------------------------------------------------------------------------
 ; $7EF421 yyyyyaaa
@@ -14,9 +12,9 @@
 ; h - shield counter
 ; c - crystal counter
 ;--------------------------------------------------------------------------------
-; $7EF423 - item counter
+; $7EF423w[2] - item counter
 ;--------------------------------------------------------------------------------
-; $7EF425w[2] 1111 2222 3333 4444
+; $7EF425w[2] 11112222 33334444
 ; 1 - lvl 1 sword bosses
 ; 2 - lvl 2 sword bosses
 ; 3 - lvl 3 sword bosses
@@ -47,7 +45,9 @@
 ;--------------------------------------------------------------------------------
 ; $7EF430w[2] - loop frame counter (high)
 ;--------------------------------------------------------------------------------
-; $7EF432w[2] - locations before boots
+; $7EF432 - locations before boots
+;--------------------------------------------------------------------------------
+; $7EF433 - locations before pearl
 ;--------------------------------------------------------------------------------
 ; $7EF434-7EF439 - FORMER COMPASS COUNTERS. DO NOT REUSE.
 ;--------------------------------------------------------------------------------
@@ -108,7 +108,9 @@
 ;--------------------------------------------------------------------------------
 ; $7EF466w[2] - mirror timestamp (high)
 ;--------------------------------------------------------------------------------
-; $7EF468w[2] - locations before mirror
+; $7EF468 - locations before mirror
+;--------------------------------------------------------------------------------
+; $7EF469 - unused
 ;--------------------------------------------------------------------------------
 ; $7EF46A mmkkkkkk
 ; m - mail counter
@@ -122,7 +124,9 @@
 ;--------------------------------------------------------------------------------
 ; $7EF46F - small keys used
 ;--------------------------------------------------------------------------------
-; $7EF470 - 7EF497 - Free space
+; $7EF470 - 7EF47F - RNG item flags (todo: possibly remove these?)
+;--------------------------------------------------------------------------------
+; $7EF480 - 7EF497 - Free space
 ;--------------------------------------------------------------------------------
 ; $7EF498w[2] - escape timestamp (low)
 ;--------------------------------------------------------------------------------
@@ -162,9 +166,8 @@ StatBonkCounter:
 	PHA
 	JSL Ancilla_CheckIfAlreadyExistsLong : BCS +
 		LDA !LOCK_STATS : BNE +
-			LDA !BONK_COUNTER : INC
-			CMP.b #100 : BEQ + ; decimal 100
-				STA !BONK_COUNTER
+		LDA !BONK_COUNTER : INC : BEQ + ; don't save if overflowed stat
+		STA !BONK_COUNTER
 	+
 	PLA
 	JSL.l AddDashTremor ; thing we wrote over
@@ -175,10 +178,9 @@ StatSaveCounter:
 	PHA
 		LDA !LOCK_STATS : BNE +
 		LDA $10 : CMP.b #$17 : BNE + ; not a proper s&q, link probably died
-		LDA !SAVE_COUNTER : INC
-		CMP.b #100 : BEQ + ; decimal 100
-			STA !SAVE_COUNTER
-		+
+		LDA !SAVE_COUNTER : INC : BEQ + ; don't save if overflowed stat
+		STA !SAVE_COUNTER
+	+
 	PLA
 RTL
 ;--------------------------------------------------------------------------------
@@ -220,17 +222,17 @@ StatTransitionCounter:
 	PHA : PHP
 		LDA !LOCK_STATS : BNE +
 		REP #$20 ; set 16-bit accumulator
-		LDA !TRANSITION_COUNTER : INC
-		CMP.w #999 : BEQ + ; decimal 999
-			STA !TRANSITION_COUNTER
-		+
+		LDA !TRANSITION_COUNTER : INC : BEQ + ; don't save if overflowed stat
+		STA !TRANSITION_COUNTER
+	+
 	PLP : PLA
 RTL
 ;--------------------------------------------------------------------------------
 !FLUTE_COUNTER = "$7EF44B"
 IncrementFlute:
 	LDA !LOCK_STATS : BNE +
-		LDA !FLUTE_COUNTER : INC : STA !FLUTE_COUNTER
+		LDA !FLUTE_COUNTER : INC : BEQ + ; don't save if overflowed stat
+		STA !FLUTE_COUNTER
 	+
 	JSL.l StatTransitionCounter ; also increment transition counter
 RTL
@@ -270,10 +272,12 @@ DecrementSmallKeys:
 	STA $7EF36F ; thing we wrote over, write small key count
 	JSL.l UpdateKeys
 
-	; increment total key usage count
-	LDA !LOCK_STATS : AND #$00FF : BNE +
-		LDA !KEYS_USED_COUNTER : INC : STA !KEYS_USED_COUNTER
+	SEP #$20 ; Set 8-bit mode
+	LDA !LOCK_STATS : BNE +
+		LDA !KEYS_USED_COUNTER : INC : BEQ + ; don't save if overflowed stat
+		STA !KEYS_USED_COUNTER ; increment total key usage count
 	+
+	REP #$20 ; Set 16-bit mode
 RTL
 ;--------------------------------------------------------------------------------
 CountChestKeyLong: ; called from ItemDowngradeFix in itemdowngrade.asm
@@ -433,9 +437,8 @@ RTL
 	.subtractRupees
 	PHA : PHP
 	LDA !LOCK_STATS : AND.w #$00FF : BNE +
-		LDA !SPENT_RUPEES : INC
-		CMP.w #9999 : BEQ + ; decimal 9999
-			STA !SPENT_RUPEES
+		LDA !SPENT_RUPEES : INC : BEQ + ; don't save if overflowed stat
+		STA !SPENT_RUPEES
 	+
 	PLP : PLA
 RTL
