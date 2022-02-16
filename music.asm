@@ -285,6 +285,25 @@ Overworld_MosaicDarkWorldChecks:
 ;--------------------------------------------------------------------------------
 
 ;--------------------------------------------------------------------------------
+; This is the where the music can change due to an UW transition
+; 
+; On entry, A=16bit XY=8bit, A & X safe to mod, Y unknown
+Underworld_DoorDown_Entry:
+    LDX #$FF ; some junk value to be used later to determine if the below lines will change the track
+    LDA.l $7EF3C5 : AND.w #$00FF : CMP.w #2 : !BLT .vanilla
+    LDA.l DRMode : BNE .done
+
+.vanilla ; thing we wrote over
+    LDA $A0 : CMP.w #$0012 : BNE +
+        LDX.b #$14 ; value for Sanc music
+        BRA .done
+    + LDA $A2 : CMP.w #$0012 : BNE .done
+        LDX.b #$10 ; value for Hyrule Castle music
+.done
+    LDA $A0 : RTL
+;--------------------------------------------------------------------------------
+
+;--------------------------------------------------------------------------------
 ; Check if the boss in ToH has been defeated (16-bit accumulator)
 CheckHeraBossDefeated:
     LDA $7EF00F : AND #$00FF

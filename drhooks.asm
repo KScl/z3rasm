@@ -76,6 +76,9 @@ nop : jsl OverridePaletteHeader
 org $02817e ; Bank02.asm : 414 (LDA $02811E, X)
 jsl FixAnimatedTiles
 
+org $0aef43 ; UnderworldMap_RecoverGFX
+jsl FixCloseDungeonMap
+
 org $028a06 ; Bank02.asm : 1941 Dungeon_ResetTorchBackgroundAndPlayer
 JSL FixWallmasterLamp
 
@@ -178,6 +181,17 @@ org $09a681 ; < - similar to talalong.asm : 1157 (JSL Main_ShowTextMessage)
 JSL BlindsAtticHint : NOP #2
 org $1cfd69
 Main_ShowTextMessage:
+
+; Conditionally disable UW music changes in Door Rando
+org $028ADB ; <- Bank02.asm:2088-2095 (LDX.b #$14 : LDA $A0 ...)
+JSL.l Underworld_DoorDown_Entry : CPX #$FF
+BEQ + : db $80, $1C ; BRA $028B04
+NOP #6 : +
+
+org $02C3F2 ; <- Bank02.asm:10521 Unused call
+Underworld_DoorDown_Call:
+org $02C3F3
+dw $8AD9 ; address of Bank02.asm:2085
 
 ; These two, if enabled together, have implications for vanilla BK doors in IP/Hera/Mire
 ; IPBJ is common enough to consider not doing this. Mire is not a concern for vanilla - maybe glitched modes

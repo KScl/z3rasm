@@ -407,9 +407,8 @@ StraightStairsTrapDoor:
             .animateTraps
             lda #$05 : sta $11
             inc $0468 : stz $068e : stz $0690
-        ++ rtl
-    + jsl Dungeon_ApproachFixedColor ; what we wrote over
-    rtl
+        ++ JSL Underworld_DoorDown_Call : rtl
+    + JML Dungeon_ApproachFixedColor ; what we wrote over
 }
 
 InroomStairsTrapDoor:
