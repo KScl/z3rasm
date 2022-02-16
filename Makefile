@@ -6,6 +6,7 @@ SOURCEDIR=inp
 OUTPUTDIR=out
 
 SOURCEROM=${SOURCEDIR}/z3.sfc
+TEMPROM=${OUTPUTDIR}/tmp.sfc
 OUTPUTROM=${OUTPUTDIR}/baserom.sfc
 OUTPUTPATCH=${OUTPUTDIR}/basepatch.bmbp
 
@@ -15,8 +16,9 @@ BASEASM=LTTP_RND_GeneralBugfixes.asm
 
 $(OUTPUTROM): *.asm stats/*.asm
 	$(MAKEOUTDIR)
-	cp $(SOURCEROM) $(OUTPUTROM)
-	$(ASAR) $(BASEASM) $(OUTPUTROM)
+	cp $(SOURCEROM) $(TEMPROM)
+	$(ASAR) $(BASEASM) $(TEMPROM)
+	mv -f $(TEMPROM) $(OUTPUTROM)
 
 $(OUTPUTPATCH): $(OUTPUTROM)
 	@python3.8 patch.py
